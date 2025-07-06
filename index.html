@@ -230,7 +230,7 @@
         #xp-text { font-size: 0.7em; }
         #lives-container { font-size: 1.1em; }
 
-        .game-controls button, #options-btn {
+        .game-controls button, #options-btn, #fullscreen-btn {
             padding: 4px 8px;
             font-size: 12px;
             cursor: pointer;
@@ -240,9 +240,12 @@
             color: white;
             transition: all 0.3s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        #options-btn { background-color: #6c757d; font-size: 14px; }
-        #options-btn:hover { background-color: #5a6268; }
+        #options-btn, #fullscreen-btn { background-color: #6c757d; font-size: 14px; }
+        #options-btn:hover, #fullscreen-btn:hover { background-color: #5a6268; }
         #hint-btn { background-color: #ffc107; color: black; }
         #hint-btn:hover { background-color: #e0a800; }
         #hint-btn:disabled, #undo-btn:disabled { background-color: #6c757d; cursor: not-allowed; }
@@ -251,6 +254,11 @@
         #autocomplete-btn { background-color: #007bff; }
         #autocomplete-btn:hover { background-color: #0069d9; }
         #autocomplete-btn.hidden { display: none; }
+        #fullscreen-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+        }
 
         #message-box { font-size: 18px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); min-height: 25px; width: 100%; text-align: center; margin-bottom: 10px; }
 
@@ -455,6 +463,14 @@
                 <button id="hint-btn">💡 Hint (0)</button>
                 <button id="achievements-btn">🏆</button>
                 <button id="options-btn">⚙️</button>
+                <button id="fullscreen-btn">
+                    <svg id="fullscreen-icon" viewBox="0 0 24 24">
+                        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                    </svg>
+                    <svg id="exit-fullscreen-icon" viewBox="0 0 24 24" style="display: none;">
+                        <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                    </svg>
+                </button>
             </div>
         </div>
         
@@ -607,6 +623,9 @@
         const cardStyleModal = document.getElementById('card-style-modal');
         const normalStyleBtn = document.getElementById('normal-style-btn');
         const easySeeBtn = document.getElementById('easy-see-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const fullscreenIcon = document.getElementById('fullscreen-icon');
+        const exitFullscreenIcon = document.getElementById('exit-fullscreen-icon');
         const starfieldCanvas = document.getElementById('starfield-canvas');
         const lavalampCanvas = document.getElementById('lavalamp-canvas');
         const oceanCanvas = document.getElementById('ocean-canvas');
