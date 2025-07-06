@@ -1541,12 +1541,6 @@
                 const pile = foundations[index];
                 if (pile.length > 0) {
                     foundationEl.appendChild(createCardElement(pile[pile.length - 1], true));
-                } else {
-                    // Show a placeholder suit icon if the foundation is empty
-                    const suitSymbol = document.createElement('div');
-                    suitSymbol.textContent = SUITS[index];
-                    suitSymbol.style.cssText = `font-size: 40px; color: ${ (SUITS[index] === '♥' || SUITS[index] === '♦') ? '#d90429' : '#000000'}; opacity: 0.3;`;
-                    foundationEl.appendChild(suitSymbol);
                 }
             });
         }
