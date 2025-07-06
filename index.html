@@ -40,7 +40,7 @@
             transition: background 0.5s ease;
         }
         
-        #starfield-canvas, #lavalamp-canvas, #ocean-canvas, #matrix-canvas, #geometric-canvas, #fire-canvas, #rain-canvas, #hyperspace-canvas, #plasma-canvas, #forest-canvas, #neongrid-canvas, #sakura-canvas, #quantum-canvas, #digitalrain-canvas, #sands-canvas, #inkblot-canvas, #cosmic-canvas, #musicviz-canvas, #bioforest-canvas, #stainedglass-canvas, #watery-canvas, #swarm-canvas, #glitch-canvas, #aurora-canvas, #constellation-canvas {
+        #starfield-canvas, #lavalamp-canvas, #ocean-canvas, #matrix-canvas, #geometric-canvas, #fire-canvas, #rain-canvas, #hyperspace-canvas, #plasma-canvas, #forest-canvas, #neongrid-canvas, #sakura-canvas, #quantum-canvas, #digitalrain-canvas, #sands-canvas, #inkblot-canvas, #cosmic-canvas, #musicviz-canvas, #bioforest-canvas, #stainedglass-canvas, #watery-canvas, #swarm-canvas, #glitch-canvas, #aurora-canvas, #constellation-canvas, #synthwave-canvas, #nebula-canvas, #jungle-canvas, #cityscape-canvas, #paint-canvas, #tunnel-canvas, #fireflies-canvas, #bubbles-canvas, #warpspeed-canvas, #hexgrid-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -49,8 +49,8 @@
             z-index: -1;
             display: none;
         }
-        #starfield-canvas, #matrix-canvas, #hyperspace-canvas, #neongrid-canvas, #digitalrain-canvas, #cosmic-canvas, #swarm-canvas, #glitch-canvas, #constellation-canvas { background-color: #000; }
-        #plasma-canvas, #forest-canvas, #quantum-canvas, #bioforest-canvas, #aurora-canvas { background-color: #111; }
+        #starfield-canvas, #matrix-canvas, #hyperspace-canvas, #neongrid-canvas, #digitalrain-canvas, #cosmic-canvas, #swarm-canvas, #glitch-canvas, #constellation-canvas, #synthwave-canvas, #nebula-canvas, #tunnel-canvas, #fireflies-canvas, #warpspeed-canvas, #hexgrid-canvas, #cityscape-canvas { background-color: #000; }
+        #plasma-canvas, #forest-canvas, #quantum-canvas, #bioforest-canvas, #aurora-canvas, #jungle-canvas { background-color: #111; }
 
 
         /* Title Screen */
@@ -230,7 +230,7 @@
         #xp-text { font-size: 0.7em; }
         #lives-container { font-size: 1.1em; }
 
-        .game-controls button, #options-btn, #fullscreen-btn {
+        .game-controls button, #options-btn, #fullscreen-btn, #mute-btn {
             padding: 4px 8px;
             font-size: 12px;
             cursor: pointer;
@@ -244,8 +244,8 @@
             align-items: center;
             justify-content: center;
         }
-        #options-btn, #fullscreen-btn { background-color: #6c757d; font-size: 14px; }
-        #options-btn:hover, #fullscreen-btn:hover { background-color: #5a6268; }
+        #options-btn, #fullscreen-btn, #mute-btn { background-color: #6c757d; font-size: 14px; }
+        #options-btn:hover, #fullscreen-btn:hover, #mute-btn:hover { background-color: #5a6268; }
         #hint-btn { background-color: #ffc107; color: black; }
         #hint-btn:hover { background-color: #e0a800; }
         #hint-btn:disabled, #undo-btn:disabled { background-color: #6c757d; cursor: not-allowed; }
@@ -254,7 +254,7 @@
         #autocomplete-btn { background-color: #007bff; }
         #autocomplete-btn:hover { background-color: #0069d9; }
         #autocomplete-btn.hidden { display: none; }
-        #fullscreen-btn svg {
+        #fullscreen-btn svg, #mute-btn svg {
             width: 14px;
             height: 14px;
             fill: white;
@@ -426,6 +426,16 @@
     <canvas id="glitch-canvas"></canvas>
     <canvas id="aurora-canvas"></canvas>
     <canvas id="constellation-canvas"></canvas>
+    <canvas id="synthwave-canvas"></canvas>
+    <canvas id="nebula-canvas"></canvas>
+    <canvas id="jungle-canvas"></canvas>
+    <canvas id="cityscape-canvas"></canvas>
+    <canvas id="paint-canvas"></canvas>
+    <canvas id="tunnel-canvas"></canvas>
+    <canvas id="fireflies-canvas"></canvas>
+    <canvas id="bubbles-canvas"></canvas>
+    <canvas id="warpspeed-canvas"></canvas>
+    <canvas id="hexgrid-canvas"></canvas>
     
     <!-- Overlay for visual effects -->
     <div id="flash-overlay"></div>
@@ -469,6 +479,14 @@
                     </svg>
                     <svg id="exit-fullscreen-icon" viewBox="0 0 24 24" style="display: none;">
                         <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                    </svg>
+                </button>
+                <button id="mute-btn">
+                    <svg id="unmuted-icon" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <svg id="muted-icon" viewBox="0 0 24 24" style="display: none;">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
                     </svg>
                 </button>
             </div>
@@ -626,6 +644,9 @@
         const fullscreenBtn = document.getElementById('fullscreen-btn');
         const fullscreenIcon = document.getElementById('fullscreen-icon');
         const exitFullscreenIcon = document.getElementById('exit-fullscreen-icon');
+        const muteBtn = document.getElementById('mute-btn');
+        const unmutedIcon = document.getElementById('unmuted-icon');
+        const mutedIcon = document.getElementById('muted-icon');
         const starfieldCanvas = document.getElementById('starfield-canvas');
         const lavalampCanvas = document.getElementById('lavalamp-canvas');
         const oceanCanvas = document.getElementById('ocean-canvas');
@@ -651,6 +672,16 @@
         const glitchCanvas = document.getElementById('glitch-canvas');
         const auroraCanvas = document.getElementById('aurora-canvas');
         const constellationCanvas = document.getElementById('constellation-canvas');
+        const synthwaveCanvas = document.getElementById('synthwave-canvas');
+        const nebulaCanvas = document.getElementById('nebula-canvas');
+        const jungleCanvas = document.getElementById('jungle-canvas');
+        const cityscapeCanvas = document.getElementById('cityscape-canvas');
+        const paintCanvas = document.getElementById('paint-canvas');
+        const tunnelCanvas = document.getElementById('tunnel-canvas');
+        const firefliesCanvas = document.getElementById('fireflies-canvas');
+        const bubblesCanvas = document.getElementById('bubbles-canvas');
+        const warpspeedCanvas = document.getElementById('warpspeed-canvas');
+        const hexgridCanvas = document.getElementById('hexgrid-canvas');
 
 
         // --- Game Constants ---
@@ -722,7 +753,17 @@
             { id: 'board-23', name: 'Glitchscape', type: 'animated' },
             { id: 'board-24', name: 'Aurora Borealis', type: 'animated' },
             { id: 'board-25', name: 'Interactive Constellations', type: 'animated' },
-            ...Array.from({length: 34}, (_, i) => ({ id: `board-${i + 26}`, name: `Pattern ${i + 1}`, type: 'procedural' }))
+            { id: 'board-26', name: 'Synthwave Sunset', type: 'animated' },
+            { id: 'board-27', name: 'Deep Space Nebula', type: 'animated' },
+            { id: 'board-28', name: 'Jungle Canopy', type: 'animated' },
+            { id: 'board-29', name: 'Cityscape at Night', type: 'animated' },
+            { id: 'board-30', name: 'Abstract Paint', type: 'animated' },
+            { id: 'board-31', name: 'Digital Tunnel', type: 'animated' },
+            { id: 'board-32', name: 'Fireflies', type: 'animated' },
+            { id: 'board-33', name: 'Underwater Bubbles', type: 'animated' },
+            { id: 'board-34', name: 'Warp Speed', type: 'animated' },
+            { id: 'board-35', name: 'Hexagon Grid', type: 'animated' },
+            ...Array.from({length: 24}, (_, i) => ({ id: `board-${i + 36}`, name: `Pattern ${i + 1}`, type: 'procedural' }))
         ];
         const ACHIEVEMENTS = {
             firstMove: { name: "Getting Started", desc: "Make your first move.", xp: 1, icon: "▶️", points: 10 },
@@ -775,6 +816,7 @@
         let newGameClickTimes = [];
         let lastLifeLostTime = 0;
         let devUnlockCounter = 0; // Counter for the secret unlock code
+        let isMuted = false;
         
         // --- Drag & Drop State ---
         // Manages the state related to dragging and dropping cards.
@@ -830,6 +872,16 @@
         let glitchCtx, glitchData, glitchAnimationId = null;
         let auroraCtx, auroraParticles = [], auroraAnimationId = null;
         let constellationCtx, constellationStars = [], constellationLines = [], constellationAnimationId = null;
+        let synthwaveCtx, synthwaveTime = 0, synthwaveAnimationId = null;
+        let nebulaCtx, nebulaParticles = [], nebulaAnimationId = null;
+        let jungleCtx, jungleVines = [], jungleAnimationId = null;
+        let cityscapeCtx, cityscapeWindows = [], cityscapeAnimationId = null;
+        let paintCtx, paintBlobs = [], paintAnimationId = null;
+        let tunnelCtx, tunnelTime = 0, tunnelAnimationId = null;
+        let firefliesCtx, fireflies = [], firefliesAnimationId = null;
+        let bubblesCtx, bubbles = [], bubblesAnimationId = null;
+        let warpspeedCtx, warpStars = [], warpspeedAnimationId = null;
+        let hexgridCtx, hexgridTime = 0, hexgridAnimationId = null;
         let mousePos = { x: 0, y: 0 };
         let currentApplyCallback = null;
         let unlockPopupQueue = [];
@@ -1015,8 +1067,10 @@
             undosAvailable = parseInt(localStorage.getItem('solitaireUndosAvailable') || '0');
             unlockedAchievements = JSON.parse(localStorage.getItem('solitaireAchievements') || '[]');
             achievementScore = parseInt(localStorage.getItem('solitaireAchievementScore') || '0');
+            isMuted = JSON.parse(localStorage.getItem('solitaireIsMuted') || 'false');
             
             checkLevelUp(false); // Update level based on loaded XP
+            updateMuteState(false); // Update mute state without playing sound
             updateCardStyles();
             updatePlayerStatsUI();
         }
@@ -1036,6 +1090,7 @@
             localStorage.setItem('solitaireUndosAvailable', undosAvailable);
             localStorage.setItem('solitaireAchievements', JSON.stringify(unlockedAchievements));
             localStorage.setItem('solitaireAchievementScore', achievementScore);
+            localStorage.setItem('solitaireIsMuted', JSON.stringify(isMuted));
         }
 
         // --- Animated Backgrounds ---
@@ -1143,6 +1198,46 @@
         function animateConstellation() { if (!constellationCtx) return; const w = constellationCanvas.width; const h = constellationCanvas.height; constellationCtx.fillStyle = 'black'; constellationCtx.fillRect(0,0,w,h); constellationStars.forEach(s1 => { const dx = s1.x - mousePos.x; const dy = s1.y - mousePos.y; const dist = Math.sqrt(dx*dx + dy*dy); const brightness = Math.max(0.2, 1 - dist / 200); constellationCtx.fillStyle = `rgba(255,255,255, ${brightness})`; constellationCtx.beginPath(); constellationCtx.arc(s1.x, s1.y, s1.size * brightness, 0, Math.PI*2); constellationCtx.fill(); constellationStars.forEach(s2 => { if (s1 === s2) return; const lineDist = Math.sqrt(Math.pow(s1.x - s2.x, 2) + Math.pow(s1.y - s2.y, 2)); if (lineDist < 100) { const lineOpacity = 1 - lineDist / 100; constellationCtx.strokeStyle = `rgba(255,255,255, ${lineOpacity * brightness * 0.5})`; constellationCtx.lineWidth = 0.5; constellationCtx.beginPath(); constellationCtx.moveTo(s1.x, s1.y); constellationCtx.lineTo(s2.x, s2.y); constellationCtx.stroke(); } }); }); constellationAnimationId = requestAnimationFrame(animateConstellation); }
         function startConstellation() { if (constellationAnimationId) return; if (!constellationCanvas) return; constellationCanvas.style.display = 'block'; setupConstellation(); animateConstellation(); }
         function stopConstellation() { if (!constellationAnimationId) return; cancelAnimationFrame(constellationAnimationId); constellationAnimationId = null; if (constellationCanvas) constellationCanvas.style.display = 'none'; }
+        function setupSynthwave() { if (!synthwaveCanvas) return; synthwaveCanvas.width = window.innerWidth; synthwaveCanvas.height = window.innerHeight; synthwaveCtx = synthwaveCanvas.getContext('2d'); synthwaveTime = 0; }
+        function animateSynthwave() { if (!synthwaveCtx) return; const w = synthwaveCanvas.width; const h = synthwaveCanvas.height; synthwaveTime += 0.01; synthwaveCtx.fillStyle = '#21003c'; synthwaveCtx.fillRect(0, 0, w, h); const sunGradient = synthwaveCtx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, 200); sunGradient.addColorStop(0, '#ffcc00'); sunGradient.addColorStop(1, 'rgba(255, 100, 0, 0)'); synthwaveCtx.fillStyle = sunGradient; synthwaveCtx.fillRect(0, 0, w, h); synthwaveCtx.strokeStyle = '#ff00ff'; synthwaveCtx.lineWidth = 2; for (let i = 0; i < 20; i++) { const y = h / 2 + i * i; const p = (y - h / 2) / (h / 2); synthwaveCtx.beginPath(); synthwaveCtx.moveTo(0, y); synthwaveCtx.lineTo(w, y); synthwaveCtx.stroke(); } for (let i = -20; i < 20; i++) { synthwaveCtx.beginPath(); synthwaveCtx.moveTo(w / 2, h / 2); synthwaveCtx.lineTo(w / 2 + i * 50, h); synthwaveCtx.stroke(); } synthwaveAnimationId = requestAnimationFrame(animateSynthwave); }
+        function startSynthwave() { if (synthwaveAnimationId) return; if (!synthwaveCanvas) return; synthwaveCanvas.style.display = 'block'; setupSynthwave(); animateSynthwave(); }
+        function stopSynthwave() { if (!synthwaveAnimationId) return; cancelAnimationFrame(synthwaveAnimationId); synthwaveAnimationId = null; if (synthwaveCanvas) synthwaveCanvas.style.display = 'none'; }
+        function setupNebula() { if (!nebulaCanvas) return; nebulaCanvas.width = window.innerWidth; nebulaCanvas.height = window.innerHeight; nebulaCtx = nebulaCanvas.getContext('2d'); nebulaParticles = []; for (let i = 0; i < 200; i++) { nebulaParticles.push({ x: Math.random() * nebulaCanvas.width, y: Math.random() * nebulaCanvas.height, size: Math.random() * 2, hue: Math.random() * 60 + 240 }); } }
+        function animateNebula() { if (!nebulaCtx) return; const w = nebulaCanvas.width; const h = nebulaCanvas.height; nebulaCtx.globalCompositeOperation = 'source-over'; nebulaCtx.fillStyle = 'rgba(0, 0, 10, 0.1)'; nebulaCtx.fillRect(0, 0, w, h); nebulaCtx.globalCompositeOperation = 'lighter'; nebulaParticles.forEach(p => { p.x += (Math.random() - 0.5); p.y += (Math.random() - 0.5); if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) { p.x = Math.random() * w; p.y = Math.random() * h; } const gradient = nebulaCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 20); gradient.addColorStop(0, `hsla(${p.hue}, 100%, 70%, 0.2)`); gradient.addColorStop(1, `hsla(${p.hue}, 100%, 70%, 0)`); nebulaCtx.fillStyle = gradient; nebulaCtx.fillRect(0, 0, w, h); }); nebulaAnimationId = requestAnimationFrame(animateNebula); }
+        function startNebula() { if (nebulaAnimationId) return; if (!nebulaCanvas) return; nebulaCanvas.style.display = 'block'; setupNebula(); animateNebula(); }
+        function stopNebula() { if (!nebulaAnimationId) return; cancelAnimationFrame(nebulaAnimationId); nebulaAnimationId = null; if (nebulaCanvas) nebulaCanvas.style.display = 'none'; }
+        function setupJungle() { if (!jungleCanvas) return; jungleCanvas.width = window.innerWidth; jungleCanvas.height = window.innerHeight; jungleCtx = jungleCanvas.getContext('2d'); jungleVines = []; for (let i = 0; i < 20; i++) { jungleVines.push({ x: Math.random() * jungleCanvas.width, len: Math.random() * 200 + 100, angle: 0 }); } }
+        function animateJungle() { if (!jungleCtx) return; const w = jungleCanvas.width; const h = jungleCanvas.height; jungleCtx.fillStyle = '#0c2e12'; jungleCtx.fillRect(0, 0, w, h); jungleVines.forEach(v => { v.angle += 0.01; jungleCtx.strokeStyle = '#3a5f0b'; jungleCtx.lineWidth = 5; jungleCtx.beginPath(); jungleCtx.moveTo(v.x, 0); jungleCtx.quadraticCurveTo(v.x + Math.sin(v.angle) * 50, v.len / 2, v.x, v.len); jungleCtx.stroke(); }); jungleAnimationId = requestAnimationFrame(animateJungle); }
+        function startJungle() { if (jungleAnimationId) return; if (!jungleCanvas) return; jungleCanvas.style.display = 'block'; setupJungle(); animateJungle(); }
+        function stopJungle() { if (!jungleAnimationId) return; cancelAnimationFrame(jungleAnimationId); jungleAnimationId = null; if (jungleCanvas) jungleCanvas.style.display = 'none'; }
+        function setupCityscape() { if (!cityscapeCanvas) return; cityscapeCanvas.width = window.innerWidth; cityscapeCanvas.height = window.innerHeight; cityscapeCtx = cityscapeCanvas.getContext('2d'); cityscapeWindows = []; for (let i = 0; i < 300; i++) { cityscapeWindows.push({ x: Math.random() * cityscapeCanvas.width, y: Math.random() * cityscapeCanvas.height, on: Math.random() > 0.8 }); } }
+        function animateCityscape() { if (!cityscapeCtx) return; const w = cityscapeCanvas.width; const h = cityscapeCanvas.height; cityscapeCtx.fillStyle = '#0a0a1a'; cityscapeCtx.fillRect(0, 0, w, h); cityscapeWindows.forEach(win => { if (Math.random() > 0.995) win.on = !win.on; if (win.on) { cityscapeCtx.fillStyle = '#ffffaa'; cityscapeCtx.fillRect(win.x, win.y, 4, 6); } }); cityscapeAnimationId = requestAnimationFrame(animateCityscape); }
+        function startCityscape() { if (cityscapeAnimationId) return; if (!cityscapeCanvas) return; cityscapeCanvas.style.display = 'block'; setupCityscape(); animateCityscape(); }
+        function stopCityscape() { if (!cityscapeAnimationId) return; cancelAnimationFrame(cityscapeAnimationId); cityscapeAnimationId = null; if (cityscapeCanvas) cityscapeCanvas.style.display = 'none'; }
+        function setupPaint() { if (!paintCanvas) return; paintCanvas.width = window.innerWidth; paintCanvas.height = window.innerHeight; paintCtx = paintCanvas.getContext('2d'); paintBlobs = []; for (let i = 0; i < 15; i++) { paintBlobs.push({ x: Math.random() * paintCanvas.width, y: Math.random() * paintCanvas.height, vx: (Math.random() - 0.5), vy: (Math.random() - 0.5), radius: Math.random() * 100 + 50, hue: Math.random() * 360 }); } }
+        function animatePaint() { if (!paintCtx) return; const w = paintCanvas.width; const h = paintCanvas.height; paintCtx.globalCompositeOperation = 'source-over'; paintCtx.fillStyle = 'rgba(255, 255, 255, 0.05)'; paintCtx.fillRect(0, 0, w, h); paintCtx.globalCompositeOperation = 'lighter'; paintBlobs.forEach(b => { b.x += b.vx; b.y += b.vy; if (b.x < 0 || b.x > w) b.vx *= -1; if (b.y < 0 || b.y > h) b.vy *= -1; paintCtx.fillStyle = `hsla(${b.hue}, 100%, 50%, 0.05)`; paintCtx.beginPath(); paintCtx.arc(b.x, b.y, b.radius, 0, Math.PI * 2); paintCtx.fill(); }); paintAnimationId = requestAnimationFrame(animatePaint); }
+        function startPaint() { if (paintAnimationId) return; if (!paintCanvas) return; paintCanvas.style.display = 'block'; setupPaint(); animatePaint(); }
+        function stopPaint() { if (!paintAnimationId) return; cancelAnimationFrame(paintAnimationId); paintAnimationId = null; if (paintCanvas) paintCanvas.style.display = 'none'; }
+        function setupTunnel() { if (!tunnelCanvas) return; tunnelCanvas.width = window.innerWidth; tunnelCanvas.height = window.innerHeight; tunnelCtx = tunnelCanvas.getContext('2d'); tunnelTime = 0; }
+        function animateTunnel() { if (!tunnelCtx) return; const w = tunnelCanvas.width; const h = tunnelCanvas.height; tunnelTime += 0.5; tunnelCtx.fillStyle = 'black'; tunnelCtx.fillRect(0, 0, w, h); tunnelCtx.strokeStyle = 'cyan'; tunnelCtx.lineWidth = 1; for (let i = 0; i < 50; i++) { const radius = i * 10 + (tunnelTime % 10); const opacity = 1 - (i / 50); tunnelCtx.strokeStyle = `rgba(0, 255, 255, ${opacity})`; tunnelCtx.beginPath(); tunnelCtx.arc(w / 2, h / 2, radius, 0, Math.PI * 2); tunnelCtx.stroke(); } tunnelAnimationId = requestAnimationFrame(animateTunnel); }
+        function startTunnel() { if (tunnelAnimationId) return; if (!tunnelCanvas) return; tunnelCanvas.style.display = 'block'; setupTunnel(); animateTunnel(); }
+        function stopTunnel() { if (!tunnelAnimationId) return; cancelAnimationFrame(tunnelAnimationId); tunnelAnimationId = null; if (tunnelCanvas) tunnelCanvas.style.display = 'none'; }
+        function setupFireflies() { if (!firefliesCanvas) return; firefliesCanvas.width = window.innerWidth; firefliesCanvas.height = window.innerHeight; firefliesCtx = firefliesCanvas.getContext('2d'); fireflies = []; for (let i = 0; i < 100; i++) { fireflies.push({ x: Math.random() * firefliesCanvas.width, y: Math.random() * firefliesCanvas.height, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, size: Math.random() * 3 + 1, brightness: 0 }); } }
+        function animateFireflies() { if (!firefliesCtx) return; const w = firefliesCanvas.width; const h = firefliesCanvas.height; firefliesCtx.fillStyle = '#001'; firefliesCtx.fillRect(0, 0, w, h); fireflies.forEach(f => { f.x += f.vx; f.y += f.vy; f.brightness = Math.max(0, f.brightness + (Math.random() > 0.95 ? 0.5 : -0.05)); if (f.x < 0 || f.x > w) f.vx *= -1; if (f.y < 0 || f.y > h) f.vy *= -1; firefliesCtx.fillStyle = `rgba(255, 255, 100, ${f.brightness})`; firefliesCtx.beginPath(); firefliesCtx.arc(f.x, f.y, f.size, 0, Math.PI * 2); firefliesCtx.fill(); }); firefliesAnimationId = requestAnimationFrame(animateFireflies); }
+        function startFireflies() { if (firefliesAnimationId) return; if (!firefliesCanvas) return; firefliesCanvas.style.display = 'block'; setupFireflies(); animateFireflies(); }
+        function stopFireflies() { if (!firefliesAnimationId) return; cancelAnimationFrame(firefliesAnimationId); firefliesAnimationId = null; if (firefliesCanvas) firefliesCanvas.style.display = 'none'; }
+        function setupBubbles() { if (!bubblesCanvas) return; bubblesCanvas.width = window.innerWidth; bubblesCanvas.height = window.innerHeight; bubblesCtx = bubblesCanvas.getContext('2d'); bubbles = []; for (let i = 0; i < 50; i++) { bubbles.push({ x: Math.random() * bubblesCanvas.width, y: bubblesCanvas.height + Math.random() * 100, r: Math.random() * 10 + 5, speed: Math.random() * 2 + 1 }); } }
+        function animateBubbles() { if (!bubblesCtx) return; const w = bubblesCanvas.width; const h = bubblesCanvas.height; bubblesCtx.fillStyle = '#005f73'; bubblesCtx.fillRect(0, 0, w, h); bubbles.forEach(b => { b.y -= b.speed; b.x += Math.sin(b.y / 50); if (b.y < -b.r) { b.y = h + b.r; b.x = Math.random() * w; } bubblesCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; bubblesCtx.lineWidth = 2; bubblesCtx.beginPath(); bubblesCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2); bubblesCtx.stroke(); }); bubblesAnimationId = requestAnimationFrame(animateBubbles); }
+        function startBubbles() { if (bubblesAnimationId) return; if (!bubblesCanvas) return; bubblesCanvas.style.display = 'block'; setupBubbles(); animateBubbles(); }
+        function stopBubbles() { if (!bubblesAnimationId) return; cancelAnimationFrame(bubblesAnimationId); bubblesAnimationId = null; if (bubblesCanvas) bubblesCanvas.style.display = 'none'; }
+        function setupWarpSpeed() { if (!warpspeedCanvas) return; warpspeedCanvas.width = window.innerWidth; warpspeedCanvas.height = window.innerHeight; warpspeedCtx = warpspeedCanvas.getContext('2d'); warpStars = []; for (let i = 0; i < 500; i++) { warpStars.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() }); } }
+        function animateWarpSpeed() { if (!warpspeedCtx) return; const w = warpspeedCanvas.width; const h = warpspeedCanvas.height; const cx = w / 2; const cy = h / 2; warpspeedCtx.fillStyle = 'rgba(0,0,0,0.2)'; warpspeedCtx.fillRect(0, 0, w, h); warpspeedCtx.strokeStyle = 'white'; warpStars.forEach(s => { s.z -= 0.01; if (s.z <= 0) { s.x = Math.random() * 2 - 1; s.y = Math.random() * 2 - 1; s.z = 1; } const px = s.x / s.z * cx + cx; const py = s.y / s.z * cy + cy; const px2 = s.x / (s.z + 0.01) * cx + cx; const py2 = s.y / (s.z + 0.01) * cy + cy; warpspeedCtx.lineWidth = (1 - s.z) * 3; warpspeedCtx.beginPath(); warpspeedCtx.moveTo(px, py); warpspeedCtx.lineTo(px2, py2); warpspeedCtx.stroke(); }); warpspeedAnimationId = requestAnimationFrame(animateWarpSpeed); }
+        function startWarpSpeed() { if (warpspeedAnimationId) return; if (!warpspeedCanvas) return; warpspeedCanvas.style.display = 'block'; setupWarpSpeed(); animateWarpSpeed(); }
+        function stopWarpSpeed() { if (!warpspeedAnimationId) return; cancelAnimationFrame(warpspeedAnimationId); warpspeedAnimationId = null; if (warpspeedCanvas) warpspeedCanvas.style.display = 'none'; }
+        function setupHexGrid() { if (!hexgridCanvas) return; hexgridCanvas.width = window.innerWidth; hexgridCanvas.height = window.innerHeight; hexgridCtx = hexgridCanvas.getContext('2d'); hexgridTime = 0; }
+        function animateHexGrid() { if (!hexgridCtx) return; const w = hexgridCanvas.width; const h = hexgridCanvas.height; hexgridTime += 0.02; hexgridCtx.fillStyle = '#111'; hexgridCtx.fillRect(0, 0, w, h); const size = 30; const hexHeight = size * Math.sqrt(3); for (let row = 0; row < h / hexHeight + 1; row++) { for (let col = 0; col < w / (size * 1.5) + 1; col++) { const x = col * size * 1.5; const y = row * hexHeight + (col % 2) * (hexHeight / 2); const dx = x - w / 2; const dy = y - h / 2; const dist = Math.sqrt(dx * dx + dy * dy); const pulse = Math.sin(dist * 0.01 - hexgridTime) * 0.5 + 0.5; hexgridCtx.strokeStyle = `hsla(180, 100%, 50%, ${pulse})`; hexgridCtx.lineWidth = 1; hexgridCtx.beginPath(); for (let i = 0; i < 6; i++) { const angle = (Math.PI / 3) * i; hexgridCtx.lineTo(x + size * Math.cos(angle), y + size * Math.sin(angle)); } hexgridCtx.closePath(); hexgridCtx.stroke(); } } hexgridAnimationId = requestAnimationFrame(animateHexGrid); }
+        function startHexGrid() { if (hexgridAnimationId) return; if (!hexgridCanvas) return; hexgridCanvas.style.display = 'block'; setupHexGrid(); animateHexGrid(); }
+        function stopHexGrid() { if (!hexgridAnimationId) return; cancelAnimationFrame(hexgridAnimationId); hexgridAnimationId = null; if (hexgridCanvas) hexgridCanvas.style.display = 'none'; }
 
 
         /**
@@ -1158,6 +1253,8 @@
             stopNeonGrid(); stopSakura(); stopQuantum(); stopDigitalRain(); stopSands();
             stopInkBlot(); stopCosmic(); stopMusicViz(); stopBioForest(); stopWatery();
             stopStainedGlass(); stopSwarm(); stopGlitch(); stopAurora(); stopConstellation();
+            stopSynthwave(); stopNebula(); stopJungle(); stopCityscape(); stopPaint();
+            stopTunnel(); stopFireflies(); stopBubbles(); stopWarpSpeed(); stopHexGrid();
             document.body.style.backgroundImage = 'none';
 
             let backgroundSet = false;
@@ -1170,7 +1267,10 @@
                 'board-16': startInkBlot, 'board-17': startCosmic, 'board-18': startMusicViz,
                 'board-19': startBioForest, 'board-20': startStainedGlass, 'board-21': startWatery,
                 'board-22': startSwarm, 'board-23': startGlitch, 'board-24': startAurora,
-                'board-25': startConstellation
+                'board-25': startConstellation, 'board-26': startSynthwave, 'board-27': startNebula,
+                'board-28': startJungle, 'board-29': startCityscape, 'board-30': startPaint,
+                'board-31': startTunnel, 'board-32': startFireflies, 'board-33': startBubbles,
+                'board-34': startWarpSpeed, 'board-35': startHexGrid,
             };
 
             if (backgroundMap[selectedBoard]) {
@@ -1608,32 +1708,49 @@
             } else {
                 dropTargetEl = document.elementFromPoint(clientX, clientY);
             }
+            
+            let moveSuccessful = false;
+            const draggedAce = draggedCardInfo.draggedCards.length === 1 && draggedCardInfo.draggedCards[0].rank === 1;
 
-            const targetTableauEl = dropTargetEl ? dropTargetEl.closest('.tableau-pile') : null;
-            const targetFoundationEl = dropTargetEl ? dropTargetEl.closest('.foundation-area .pile') : null;
+            // Case 1: Dragged an Ace and dropped it anywhere on the foundation area
+            if (draggedAce && dropTargetEl && dropTargetEl.closest('.foundation-area')) {
+                const ace = draggedCardInfo.draggedCards[0];
+                // Find the correct empty foundation pile for this Ace
+                for (let i = 0; i < foundations.length; i++) {
+                    if (isValidFoundationMove(ace, i)) {
+                        moveSuccessful = handleMove('foundation', i);
+                        break;
+                    }
+                }
+            } else { // Case 2: Standard drop logic for all other cases
+                const targetTableauEl = dropTargetEl ? dropTargetEl.closest('.tableau-pile') : null;
+                const targetFoundationEl = dropTargetEl ? dropTargetEl.closest('.foundation-area .pile') : null;
 
-            let targetPileName, targetPileIndex;
+                let targetPileName, targetPileIndex;
 
-            if (targetFoundationEl) {
-                targetPileName = 'foundation';
-                targetPileIndex = parseInt(targetFoundationEl.id.split('-')[1]);
-            } else if (targetTableauEl) {
-                targetPileName = 'tableau';
-                targetPileIndex = parseInt(targetTableauEl.id.split('-')[1]);
-            }
+                if (targetFoundationEl) {
+                    targetPileName = 'foundation';
+                    targetPileIndex = parseInt(targetFoundationEl.id.split('-')[1]);
+                } else if (targetTableauEl) {
+                    targetPileName = 'tableau';
+                    targetPileIndex = parseInt(targetTableauEl.id.split('-')[1]);
+                }
 
-            if (targetPileName !== undefined) {
-                const { sourcePileName, sourcePileIndex } = draggedCardInfo;
-                if (targetPileName === sourcePileName && targetPileIndex === sourcePileIndex) {
-                    // "no-op" move, do nothing
-                } else {
-                    const moveWasMade = handleMove(targetPileName, targetPileIndex);
-                    if (!moveWasMade) {
-                        loseLife(); // Penalize for invalid move
+                if (targetPileName !== undefined) {
+                    const { sourcePileName, sourcePileIndex } = draggedCardInfo;
+                    // Prevent penalizing for dropping back on the same pile
+                    if (targetPileName !== sourcePileName || targetPileIndex !== sourcePileIndex) {
+                         moveSuccessful = handleMove(targetPileName, targetPileIndex);
+                    } else {
+                         moveSuccessful = true; // Not a real move, but not an error either.
                     }
                 }
             }
-            
+
+            if (!moveSuccessful) {
+                loseLife();
+            }
+
             draggedCardInfo = null;
             render();
         }
@@ -2583,25 +2700,19 @@
 
         // --- Fullscreen Logic ---
         function toggleFullScreen() {
+            const docEl = document.documentElement;
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+            const cancelFullScreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+
             if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.documentElement.msRequestFullscreen) {
-                    document.documentElement.msRequestFullscreen();
-                } else if (document.documentElement.mozRequestFullScreen) {
-                    document.documentElement.mozRequestFullScreen();
-                } else if (document.documentElement.webkitRequestFullscreen) {
-                    document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                if (requestFullScreen) {
+                    requestFullScreen.call(docEl).catch(err => {
+                        console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    });
                 }
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
+                if (cancelFullScreen) {
+                    cancelFullScreen.call(document);
                 }
             }
         }
@@ -2621,6 +2732,25 @@
         document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
         document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
         document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+
+        // --- Mute Logic ---
+        function updateMuteState(playSound = true) {
+            Tone.Master.mute = isMuted;
+            if (isMuted) {
+                unmutedIcon.style.display = 'none';
+                mutedIcon.style.display = 'block';
+            } else {
+                unmutedIcon.style.display = 'block';
+                mutedIcon.style.display = 'none';
+                if(playSound) sounds.click.triggerAttackRelease("C3", "8n");
+            }
+            saveProgress();
+        }
+
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            updateMuteState();
+        });
 
 
         // --- Initial Setup ---
@@ -2654,6 +2784,16 @@
             if (glitchAnimationId) setupGlitch();
             if (auroraAnimationId) setupAurora();
             if (constellationAnimationId) setupConstellation();
+            if (synthwaveAnimationId) setupSynthwave();
+            if (nebulaAnimationId) setupNebula();
+            if (jungleAnimationId) setupJungle();
+            if (cityscapeAnimationId) setupCityscape();
+            if (paintAnimationId) setupPaint();
+            if (tunnelAnimationId) setupTunnel();
+            if (firefliesAnimationId) setupFireflies();
+            if (bubblesAnimationId) setupBubbles();
+            if (warpspeedAnimationId) setupWarpSpeed();
+            if (hexgridAnimationId) setupHexGrid();
         });
 
         window.addEventListener('mousemove', (e) => {
