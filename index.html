@@ -318,17 +318,18 @@
         .options-grid-item.locked::after { content: '🔒'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 40px; color: white; background: rgba(0,0,0,0.5); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius); }
         .options-grid-item.selected { box-shadow: 0 0 0 4px #007bff; border-color: #007bff; }
         
-        #unlock-modal .modal-content, #game-over-modal .modal-content, #draw-select-modal .modal-content, #card-style-modal .modal-content { max-width: 500px; text-align: center; }
-        #unlock-modal h2, #game-over-modal h2, #draw-select-modal h2, #card-style-modal h2 { font-size: 2em; color: var(--xp-color); }
-        #game-over-modal h2 { color: #d90429; }
-        #unlock-modal p, #game-over-modal p, #draw-select-modal p, #card-style-modal p { font-size: 1.2em; margin: 20px 0; }
-        #unlock-modal button, #game-over-modal button { padding: 10px 30px; font-size: 1.2em; }
+        #unlock-modal .modal-content, #game-over-modal .modal-content, #draw-select-modal .modal-content, #card-style-modal .modal-content, #reset-confirm-modal .modal-content { max-width: 500px; text-align: center; }
+        #unlock-modal h2, #game-over-modal h2, #draw-select-modal h2, #card-style-modal h2, #reset-confirm-modal h2 { font-size: 2em; color: var(--xp-color); }
+        #game-over-modal h2, #reset-confirm-modal h2 { color: #d90429; }
+        #unlock-modal p, #game-over-modal p, #draw-select-modal p, #card-style-modal p, #reset-confirm-modal p { font-size: 1.2em; margin: 20px 0; }
+        #unlock-modal button, #game-over-modal button, #reset-confirm-modal button { padding: 10px 30px; font-size: 1.2em; }
         
         .modal-buttons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
         .modal-buttons button { padding: 10px 30px; font-size: 1.2em; cursor: pointer; border-radius: var(--border-radius); border: none; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         #draw-1-btn, #normal-style-btn, #unlock-apply-btn { background-color: #007bff; }
         #draw-3-btn, #easy-see-btn { background-color: #4CAF50; }
-        #unlock-close-btn { background-color: #6c757d; }
+        #unlock-close-btn, #reset-cancel-btn { background-color: #6c757d; }
+        #reset-confirm-btn { background-color: #d90429; }
         
         #achievement-modal .modal-content { max-width: 600px; }
         .achievement-entry { display: flex; align-items: center; margin-bottom: 10px; opacity: 0.5; }
@@ -437,6 +438,9 @@
     <canvas id="warpspeed-canvas"></canvas>
     <canvas id="hexgrid-canvas"></canvas>
     
+    <!-- Audio Player -->
+    <audio id="background-music" loop></audio>
+
     <!-- Overlay for visual effects -->
     <div id="flash-overlay"></div>
 
@@ -553,6 +557,20 @@
                 <div>New card backs unlock with each level!</div>
                 <div id="card-back-selector" class="options-grid"></div>
             </div>
+            <div class="options-section" style="text-align: center; margin-top: 30px;">
+                <button id="reset-progress-btn" style="background-color: #d9534f; border-color: #d43f3a;">Reset All Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reset-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Reset Progress</h2>
+            <p>Are you sure you want to reset all of your progress? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="reset-confirm-btn">Yes, Reset</button>
+                <button id="reset-cancel-btn">Cancel</button>
+            </div>
         </div>
     </div>
     
@@ -647,6 +665,10 @@
         const muteBtn = document.getElementById('mute-btn');
         const unmutedIcon = document.getElementById('unmuted-icon');
         const mutedIcon = document.getElementById('muted-icon');
+        const resetProgressBtn = document.getElementById('reset-progress-btn');
+        const resetConfirmModal = document.getElementById('reset-confirm-modal');
+        const resetConfirmBtn = document.getElementById('reset-confirm-btn');
+        const resetCancelBtn = document.getElementById('reset-cancel-btn');
         const starfieldCanvas = document.getElementById('starfield-canvas');
         const lavalampCanvas = document.getElementById('lavalamp-canvas');
         const oceanCanvas = document.getElementById('ocean-canvas');
@@ -682,6 +704,7 @@
         const bubblesCanvas = document.getElementById('bubbles-canvas');
         const warpspeedCanvas = document.getElementById('warpspeed-canvas');
         const hexgridCanvas = document.getElementById('hexgrid-canvas');
+        const musicPlayer = document.getElementById('background-music');
 
 
         // --- Game Constants ---
@@ -1398,7 +1421,17 @@
                     'board-22': { bg: 'black', icon: '👾' },
                     'board-23': { bg: 'black', icon: ' glitch ' , color: '#f0f'},
                     'board-24': { bg: '#111', icon: '🌌' },
-                    'board-25': { bg: 'black', icon: '⭐' }
+                    'board-25': { bg: 'black', icon: '⭐' },
+                    'board-26': { bg: '#21003c', icon: '🌇' },
+                    'board-27': { bg: 'black', icon: '🌌' },
+                    'board-28': { bg: '#0c2e12', icon: '🌿' },
+                    'board-29': { bg: '#0a0a1a', icon: '🏙️' },
+                    'board-30': { bg: '#eee', icon: '🎨', color: 'black' },
+                    'board-31': { bg: 'black', icon: '🌀', color: 'cyan' },
+                    'board-32': { bg: '#001', icon: '✨', color: '#ff0' },
+                    'board-33': { bg: '#005f73', icon: '💧' },
+                    'board-34': { bg: 'black', icon: '🚀' },
+                    'board-35': { bg: '#111', icon: '🕸️', color: 'cyan' }
                 };
                 if (previews[boardId]) {
                     el.style.background = previews[boardId].bg;
@@ -2735,7 +2768,10 @@
 
         // --- Mute Logic ---
         function updateMuteState(playSound = true) {
+            isMuted = !isMuted;
             Tone.Master.mute = isMuted;
+            musicPlayer.muted = isMuted;
+
             if (isMuted) {
                 unmutedIcon.style.display = 'none';
                 mutedIcon.style.display = 'block';
@@ -2747,15 +2783,63 @@
             saveProgress();
         }
 
-        muteBtn.addEventListener('click', () => {
-            isMuted = !isMuted;
-            updateMuteState();
+        muteBtn.addEventListener('click', () => updateMuteState());
+
+        // --- Music Logic ---
+        const playlist = [
+            // Add your music file paths here, e.g., 'music/song1.mp3'
+        ];
+        let currentTrack = 0;
+        let musicStarted = false;
+
+        function playNextSong() {
+            if (playlist.length === 0) return;
+            currentTrack = (currentTrack + 1) % playlist.length;
+            musicPlayer.src = playlist[currentTrack];
+            musicPlayer.play().catch(e => console.log("Music play failed. User may need to interact first."));
+        }
+
+        musicPlayer.onended = playNextSong;
+
+        function startMusic() {
+            if (!musicStarted && playlist.length > 0) {
+                musicStarted = true;
+                playNextSong();
+            }
+        }
+        
+        // --- Reset Progress Logic ---
+        resetProgressBtn.addEventListener('click', () => {
+            resetConfirmModal.style.display = 'flex';
+        });
+
+        resetCancelBtn.addEventListener('click', () => {
+            resetConfirmModal.style.display = 'none';
+        });
+
+        resetConfirmBtn.addEventListener('click', () => {
+            localStorage.removeItem('solitaireWinCount');
+            localStorage.removeItem('solitaireWinStreak');
+            localStorage.removeItem('solitaireUnlockedBacks');
+            localStorage.removeItem('solitaireSelectedBack');
+            localStorage.removeItem('solitaireUnlockedBoards');
+            localStorage.removeItem('solitaireSelectedBoard');
+            localStorage.removeItem('solitairePlayerXP');
+            localStorage.removeItem('solitaireHintsAvailable');
+            localStorage.removeItem('solitaireUndosAvailable');
+            localStorage.removeItem('solitaireAchievements');
+            localStorage.removeItem('solitaireAchievementScore');
+            localStorage.removeItem('solitaireIsMuted');
+            location.reload();
         });
 
 
         // --- Initial Setup ---
         // Final setup calls when the DOM is fully loaded.
         animateTitleScreen();
+        // Start music on the first click of the start button
+        startGameBtn.addEventListener('click', startMusic, { once: true });
+        
         window.addEventListener('resize', () => {
             updatePlayerStatsUI();
             // Re-initialize animated backgrounds on resize to fit new dimensions
