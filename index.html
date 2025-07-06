@@ -805,7 +805,7 @@
             fullStack1: { name: "Column Major", desc: "Build a full stack from King to Ace.", xp: 20, icon: "🏛️", points: 20 },
             fullStack2: { name: "Major Major", desc: "Build two full stacks in one game.", xp: 50, icon: "🏛️🏛️", points: 50 },
             firstUndo: { name: "Second Thoughts", desc: "Use the Undo button for the first time.", xp: 1, icon: "⎌", points: 10 },
-            firstHint: { name: "A Little Help?", desc: "Use the Hint button for the first time.", xp: 1, icon: "💡", points: 10 },
+            firstHint: { name: "A Little Help?", desc: "Use the Hint button for the first time.", xp: 1, icon: "�", points: 10 },
             wildWin: { name: "Joker's Gambit", desc: "Win a game by playing a Wild Card as the last card.", xp: 50, icon: "🃏", points: 100, secret: true },
             level2: { name: "Rookie", desc: "Reach Level 2.", xp: 10, icon: "⭐", points: 10 },
             level5: { name: "Veteran", desc: "Reach Level 5.", xp: 20, icon: "⭐⭐", points: 20 },
@@ -1093,7 +1093,7 @@
             isMuted = JSON.parse(localStorage.getItem('solitaireIsMuted') || 'false');
             
             checkLevelUp(false); // Update level based on loaded XP
-            updateMuteState(false); // Update mute state without playing sound
+            applyMuteState(); // Apply the loaded mute state
             updateCardStyles();
             updatePlayerStatsUI();
         }
@@ -1415,7 +1415,7 @@
                     'board-16': { bg: '#F5EEDC', icon: '✒️', color: 'black' },
                     'board-17': { bg: 'black', icon: '💫' },
                     'board-18': { bg: 'black', icon: '🎵', color: 'magenta' },
-                    'board-19': { bg: '#0a1a0a', icon: '�', color: 'cyan' },
+                    'board-19': { bg: '#0a1a0a', icon: '🍄', color: 'cyan' },
                     'board-20': { bg: '#3498db', icon: '💧' },
                     'board-21': { bg: 'black', icon: '✨' },
                     'board-22': { bg: 'black', icon: '👾' },
@@ -2767,8 +2767,7 @@
         document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
 
         // --- Mute Logic ---
-        function updateMuteState(playSound = true) {
-            isMuted = !isMuted;
+        function applyMuteState() {
             Tone.Master.mute = isMuted;
             musicPlayer.muted = isMuted;
 
@@ -2778,12 +2777,18 @@
             } else {
                 unmutedIcon.style.display = 'block';
                 mutedIcon.style.display = 'none';
-                if(playSound) sounds.click.triggerAttackRelease("C3", "8n");
+            }
+        }
+        
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            applyMuteState();
+            if(!isMuted) {
+                sounds.click.triggerAttackRelease("C3", "8n");
             }
             saveProgress();
-        }
+        });
 
-        muteBtn.addEventListener('click', () => updateMuteState());
 
         // --- Music Logic ---
         const playlist = [
