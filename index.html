@@ -40,7 +40,7 @@
             transition: background 0.5s ease;
         }
         
-        #starfield-canvas, #lavalamp-canvas, #ocean-canvas, #matrix-canvas, #geometric-canvas, #fire-canvas, #rain-canvas, #hyperspace-canvas, #plasma-canvas, #forest-canvas, #neongrid-canvas, #sakura-canvas, #quantum-canvas, #digitalrain-canvas, #sands-canvas, #inkblot-canvas, #cosmic-canvas, #musicviz-canvas, #bioforest-canvas, #stainedglass-canvas, #watery-canvas, #swarm-canvas, #glitch-canvas, #aurora-canvas, #constellation-canvas, #synthwave-canvas, #nebula-canvas, #jungle-canvas, #cityscape-canvas, #paint-canvas, #tunnel-canvas, #fireflies-canvas, #bubbles-canvas, #warpspeed-canvas, #hexgrid-canvas {
+        #starfield-canvas, #lavalamp-canvas, #ocean-canvas, #matrix-canvas, #geometric-canvas, #fire-canvas, #rain-canvas, #hyperspace-canvas, #plasma-canvas, #forest-canvas, #neongrid-canvas, #sakura-canvas, #quantum-canvas, #digitalrain-canvas, #sands-canvas, #inkblot-canvas, #cosmic-canvas, #musicviz-canvas, #bioforest-canvas, #stainedglass-canvas, #watery-canvas, #swarm-canvas, #glitch-canvas, #aurora-canvas, #constellation-canvas, #synthwave-canvas, #nebula-canvas, #jungle-canvas, #cityscape-canvas, #paint-canvas, #laserGrid-canvas, #neonPalms-canvas, #memphis-canvas, #cassette-canvas, #eightBitCity-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -49,7 +49,7 @@
             z-index: -1;
             display: none;
         }
-        #starfield-canvas, #matrix-canvas, #hyperspace-canvas, #neongrid-canvas, #digitalrain-canvas, #cosmic-canvas, #swarm-canvas, #glitch-canvas, #constellation-canvas, #synthwave-canvas, #nebula-canvas, #tunnel-canvas, #fireflies-canvas, #warpspeed-canvas, #hexgrid-canvas, #cityscape-canvas { background-color: #000; }
+        #starfield-canvas, #matrix-canvas, #hyperspace-canvas, #neongrid-canvas, #digitalrain-canvas, #cosmic-canvas, #swarm-canvas, #glitch-canvas, #constellation-canvas, #synthwave-canvas, #nebula-canvas, #laserGrid-canvas, #neonPalms-canvas, #eightBitCity-canvas, #cityscape-canvas, #cassette-canvas { background-color: #000; }
         #plasma-canvas, #forest-canvas, #quantum-canvas, #bioforest-canvas, #aurora-canvas, #jungle-canvas { background-color: #111; }
 
 
@@ -432,11 +432,11 @@
     <canvas id="jungle-canvas"></canvas>
     <canvas id="cityscape-canvas"></canvas>
     <canvas id="paint-canvas"></canvas>
-    <canvas id="tunnel-canvas"></canvas>
-    <canvas id="fireflies-canvas"></canvas>
-    <canvas id="bubbles-canvas"></canvas>
-    <canvas id="warpspeed-canvas"></canvas>
-    <canvas id="hexgrid-canvas"></canvas>
+    <canvas id="laserGrid-canvas"></canvas>
+    <canvas id="neonPalms-canvas"></canvas>
+    <canvas id="memphis-canvas"></canvas>
+    <canvas id="cassette-canvas"></canvas>
+    <canvas id="eightBitCity-canvas"></canvas>
     
     <!-- Overlay for visual effects -->
     <div id="flash-overlay"></div>
@@ -554,6 +554,11 @@
                 <div>New card backs unlock with each level!</div>
                 <div id="card-back-selector" class="options-grid"></div>
             </div>
+             <div class="options-section">
+                <h4>Music Tracks</h4>
+                <div>New tracks unlock every other level!</div>
+                <div id="music-selector" class="options-grid"></div>
+            </div>
             <div class="options-section" style="text-align: center; margin-top: 30px;">
                 <button id="reset-progress-btn" style="background-color: #d9534f; border-color: #d43f3a;">Reset All Progress</button>
             </div>
@@ -599,7 +604,6 @@
         </div>
     </div>
 
-    <!-- Containers for visual effects -->
     <div id="achievement-container"></div>
     <div id="fireworks-container"></div>
 
@@ -632,6 +636,7 @@
         const unlockDescription = document.getElementById('unlock-description');
         const cardBackSelector = document.getElementById('card-back-selector');
         const boardSelector = document.getElementById('board-selector');
+        const musicSelector = document.getElementById('music-selector');
         const winCountEl = document.querySelector('#options-modal #win-count');
         const levelTextEl = document.getElementById('level-text');
         const xpTextEl = document.getElementById('xp-text');
@@ -696,11 +701,11 @@
         const jungleCanvas = document.getElementById('jungle-canvas');
         const cityscapeCanvas = document.getElementById('cityscape-canvas');
         const paintCanvas = document.getElementById('paint-canvas');
-        const tunnelCanvas = document.getElementById('tunnel-canvas');
-        const firefliesCanvas = document.getElementById('fireflies-canvas');
-        const bubblesCanvas = document.getElementById('bubbles-canvas');
-        const warpspeedCanvas = document.getElementById('warpspeed-canvas');
-        const hexgridCanvas = document.getElementById('hexgrid-canvas');
+        const laserGridCanvas = document.getElementById('laserGrid-canvas');
+        const neonPalmsCanvas = document.getElementById('neonPalms-canvas');
+        const memphisCanvas = document.getElementById('memphis-canvas');
+        const cassetteCanvas = document.getElementById('cassette-canvas');
+        const eightBitCityCanvas = document.getElementById('eightBitCity-canvas');
 
 
         // --- Game Constants ---
@@ -777,13 +782,18 @@
             { id: 'board-28', name: 'Jungle Canopy', type: 'animated' },
             { id: 'board-29', name: 'Cityscape at Night', type: 'animated' },
             { id: 'board-30', name: 'Abstract Paint', type: 'animated' },
-            { id: 'board-31', name: 'Digital Tunnel', type: 'animated' },
-            { id: 'board-32', name: 'Fireflies', type: 'animated' },
-            { id: 'board-33', name: 'Underwater Bubbles', type: 'animated' },
-            { id: 'board-34', name: 'Warp Speed', type: 'animated' },
-            { id: 'board-35', name: 'Hexagon Grid', type: 'animated' },
+            { id: 'board-31', name: 'Laser Grid', type: 'animated' },
+            { id: 'board-32', name: 'Neon Palms', type: 'animated' },
+            { id: 'board-33', name: 'Memphis Pattern', type: 'animated' },
+            { id: 'board-34', name: 'Cassette Tape', type: 'animated' },
+            { id: 'board-35', name: '8-bit City', type: 'animated' },
             ...Array.from({length: 24}, (_, i) => ({ id: `board-${i + 36}`, name: `Pattern ${i + 1}`, type: 'procedural' }))
         ];
+        const MUSIC_DATA = Array.from({length: 10}, (_, i) => ({
+            id: `track-${i+1}`,
+            name: `Track ${String(i + 1).padStart(2, '0')}`,
+            url: `https://raw.githubusercontent.com/cdbyall/solitaire/main/music/${String(i + 1).padStart(2, '0')}.mp3`
+        }));
         const ACHIEVEMENTS = {
             firstMove: { name: "Getting Started", desc: "Make your first move.", xp: 1, icon: "▶️", points: 10 },
             firstFoundation: { name: "On the Up and Up", desc: "Place your first card on a foundation.", xp: 5, icon: "🏆", points: 10 },
@@ -836,6 +846,11 @@
         let lastLifeLostTime = 0;
         let devUnlockCounter = 0; // Counter for the secret unlock code
         let isMuted = false;
+        let unlockedTracks = ['track-1'];
+        let currentTrackPlayer;
+        let currentTrackIndex = -1;
+        let shuffledPlaylist = [];
+        let introPlayer;
         
         // --- Drag & Drop State ---
         // Manages the state related to dragging and dropping cards.
@@ -896,11 +911,11 @@
         let jungleCtx, jungleVines = [], jungleAnimationId = null;
         let cityscapeCtx, cityscapeWindows = [], cityscapeAnimationId = null;
         let paintCtx, paintBlobs = [], paintAnimationId = null;
-        let tunnelCtx, tunnelTime = 0, tunnelAnimationId = null;
-        let firefliesCtx, fireflies = [], firefliesAnimationId = null;
-        let bubblesCtx, bubbles = [], bubblesAnimationId = null;
-        let warpspeedCtx, warpStars = [], warpspeedAnimationId = null;
-        let hexgridCtx, hexgridTime = 0, hexgridAnimationId = null;
+        let laserGridCtx, laserGridTime = 0, laserGridAnimationId = null;
+        let neonPalmsCtx, neonPalmsTime = 0, neonPalmsAnimationId = null;
+        let memphisCtx, memphisShapes = [], memphisAnimationId = null;
+        let cassetteCtx, cassetteTime = 0, cassetteAnimationId = null;
+        let eightBitCityCtx, eightBitCityBuildings = [], eightBitCityAnimationId = null;
         let mousePos = { x: 0, y: 0 };
         let currentApplyCallback = null;
         let unlockPopupQueue = [];
@@ -1002,14 +1017,27 @@
             });
         }
 
-        /**
-         * Handles the transition from the title screen to the main game.
-         */
+        function initializeAudio() {
+            Tone.start().then(() => {
+                setupSounds();
+                setupPhysics();
+
+                if (!titleScreen.classList.contains('hidden')) {
+                    introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/intro.mp3").toDestination();
+                    introPlayer.loop = true;
+                    introPlayer.autostart = true;
+                    updateMuteState(false);
+                }
+            });
+            document.removeEventListener('click', initializeAudio);
+            document.removeEventListener('touchstart', initializeAudio);
+        }
+        document.addEventListener('click', initializeAudio, { once: true });
+        document.addEventListener('touchstart', initializeAudio, { once: true });
+
         startGameBtn.addEventListener('click', () => {
-            Tone.start(); // Required for audio to work in browsers
-            setupSounds();
-            setupPhysics();
-            sounds.click.triggerAttackRelease("C2", "8n");
+            if (sounds && sounds.click) sounds.click.triggerAttackRelease("C2", "8n");
+            
             titleScreen.classList.add('hidden');
             setTimeout(() => {
                 gameContainer.style.display = 'flex';
@@ -1029,6 +1057,13 @@
          * Resets the game state and deals a new set of cards.
          */
         function initializeNewGame() {
+            if (introPlayer) {
+                introPlayer.stop();
+                introPlayer.dispose();
+                introPlayer = null;
+            }
+            startMainPlaylist();
+
             if (!isGameWon) {
                 winStreak = 0; // Reset streak if the previous game wasn't won
             }
@@ -1087,6 +1122,7 @@
             unlockedAchievements = JSON.parse(localStorage.getItem('solitaireAchievements') || '[]');
             achievementScore = parseInt(localStorage.getItem('solitaireAchievementScore') || '0');
             isMuted = JSON.parse(localStorage.getItem('solitaireIsMuted') || 'false');
+            unlockedTracks = JSON.parse(localStorage.getItem('solitaireUnlockedTracks')) || ['track-1'];
             
             checkLevelUp(false); // Update level based on loaded XP
             updateMuteState(false); // Update mute state without playing sound
@@ -1110,6 +1146,7 @@
             localStorage.setItem('solitaireAchievements', JSON.stringify(unlockedAchievements));
             localStorage.setItem('solitaireAchievementScore', achievementScore);
             localStorage.setItem('solitaireIsMuted', JSON.stringify(isMuted));
+            localStorage.setItem('solitaireUnlockedTracks', JSON.stringify(unlockedTracks));
         }
 
         // --- Animated Backgrounds ---
@@ -1218,7 +1255,7 @@
         function startConstellation() { if (constellationAnimationId) return; if (!constellationCanvas) return; constellationCanvas.style.display = 'block'; setupConstellation(); animateConstellation(); }
         function stopConstellation() { if (!constellationAnimationId) return; cancelAnimationFrame(constellationAnimationId); constellationAnimationId = null; if (constellationCanvas) constellationCanvas.style.display = 'none'; }
         function setupSynthwave() { if (!synthwaveCanvas) return; synthwaveCanvas.width = window.innerWidth; synthwaveCanvas.height = window.innerHeight; synthwaveCtx = synthwaveCanvas.getContext('2d'); synthwaveTime = 0; }
-        function animateSynthwave() { if (!synthwaveCtx) return; const w = synthwaveCanvas.width; const h = synthwaveCanvas.height; synthwaveTime += 0.01; synthwaveCtx.fillStyle = '#21003c'; synthwaveCtx.fillRect(0, 0, w, h); const sunGradient = synthwaveCtx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, 200); sunGradient.addColorStop(0, '#ffcc00'); sunGradient.addColorStop(1, 'rgba(255, 100, 0, 0)'); synthwaveCtx.fillStyle = sunGradient; synthwaveCtx.fillRect(0, 0, w, h); synthwaveCtx.strokeStyle = '#ff00ff'; synthwaveCtx.lineWidth = 2; for (let i = 0; i < 20; i++) { const y = h / 2 + i * i; const p = (y - h / 2) / (h / 2); synthwaveCtx.beginPath(); synthwaveCtx.moveTo(0, y); synthwaveCtx.lineTo(w, y); synthwaveCtx.stroke(); } for (let i = -20; i < 20; i++) { synthwaveCtx.beginPath(); synthwaveCtx.moveTo(w / 2, h / 2); synthwaveCtx.lineTo(w / 2 + i * 50, h); synthwaveCtx.stroke(); } synthwaveAnimationId = requestAnimationFrame(animateSynthwave); }
+        function animateSynthwave() { if (!synthwaveCtx) return; const w = synthwaveCanvas.width; const h = synthwaveCanvas.height; synthwaveTime += 0.01; synthwaveCtx.fillStyle = '#21003c'; synthwaveCtx.fillRect(0, 0, w, h); const sunGradient = synthwaveCtx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, 200); sunGradient.addColorStop(0, '#ffcc00'); sunGradient.addColorStop(1, 'rgba(255, 100, 0, 0)'); synthwaveCtx.fillStyle = sunGradient; synthwaveCtx.fillRect(0, 0, w, h); synthwaveCtx.strokeStyle = '#ff00ff'; synthwaveCtx.lineWidth = 2; for (let i = 0; i < 20; i++) { const y = h / 2 + i * i; const p = (y - h / 2) / (h / 2); synthwaveCtx.beginPath(); synthwaveCtx.moveTo(0, y); synthwaveCtx.lineTo(w, y); synthwaveCtx.stroke(); } for (let i = -20; i < 20; i++) { synthwaveCtx.beginPath(); synthwaveCtx.moveTo(w / 2, h / 2); synthwaveCtx.lineTo(w / 2 + i * w / 20, h); synthwaveCtx.stroke(); } synthwaveAnimationId = requestAnimationFrame(animateSynthwave); }
         function startSynthwave() { if (synthwaveAnimationId) return; if (!synthwaveCanvas) return; synthwaveCanvas.style.display = 'block'; setupSynthwave(); animateSynthwave(); }
         function stopSynthwave() { if (!synthwaveAnimationId) return; cancelAnimationFrame(synthwaveAnimationId); synthwaveAnimationId = null; if (synthwaveCanvas) synthwaveCanvas.style.display = 'none'; }
         function setupNebula() { if (!nebulaCanvas) return; nebulaCanvas.width = window.innerWidth; nebulaCanvas.height = window.innerHeight; nebulaCtx = nebulaCanvas.getContext('2d'); nebulaParticles = []; for (let i = 0; i < 200; i++) { nebulaParticles.push({ x: Math.random() * nebulaCanvas.width, y: Math.random() * nebulaCanvas.height, size: Math.random() * 2, hue: Math.random() * 60 + 240 }); } }
@@ -1237,26 +1274,26 @@
         function animatePaint() { if (!paintCtx) return; const w = paintCanvas.width; const h = paintCanvas.height; paintCtx.globalCompositeOperation = 'source-over'; paintCtx.fillStyle = 'rgba(255, 255, 255, 0.05)'; paintCtx.fillRect(0, 0, w, h); paintCtx.globalCompositeOperation = 'lighter'; paintBlobs.forEach(b => { b.x += b.vx; b.y += b.vy; if (b.x < 0 || b.x > w) b.vx *= -1; if (b.y < 0 || b.y > h) b.vy *= -1; paintCtx.fillStyle = `hsla(${b.hue}, 100%, 50%, 0.05)`; paintCtx.beginPath(); paintCtx.arc(b.x, b.y, b.radius, 0, Math.PI * 2); paintCtx.fill(); }); paintAnimationId = requestAnimationFrame(animatePaint); }
         function startPaint() { if (paintAnimationId) return; if (!paintCanvas) return; paintCanvas.style.display = 'block'; setupPaint(); animatePaint(); }
         function stopPaint() { if (!paintAnimationId) return; cancelAnimationFrame(paintAnimationId); paintAnimationId = null; if (paintCanvas) paintCanvas.style.display = 'none'; }
-        function setupTunnel() { if (!tunnelCanvas) return; tunnelCanvas.width = window.innerWidth; tunnelCanvas.height = window.innerHeight; tunnelCtx = tunnelCanvas.getContext('2d'); tunnelTime = 0; }
-        function animateTunnel() { if (!tunnelCtx) return; const w = tunnelCanvas.width; const h = tunnelCanvas.height; tunnelTime += 0.5; tunnelCtx.fillStyle = 'black'; tunnelCtx.fillRect(0, 0, w, h); tunnelCtx.strokeStyle = 'cyan'; tunnelCtx.lineWidth = 1; for (let i = 0; i < 50; i++) { const radius = i * 10 + (tunnelTime % 10); const opacity = 1 - (i / 50); tunnelCtx.strokeStyle = `rgba(0, 255, 255, ${opacity})`; tunnelCtx.beginPath(); tunnelCtx.arc(w / 2, h / 2, radius, 0, Math.PI * 2); tunnelCtx.stroke(); } tunnelAnimationId = requestAnimationFrame(animateTunnel); }
-        function startTunnel() { if (tunnelAnimationId) return; if (!tunnelCanvas) return; tunnelCanvas.style.display = 'block'; setupTunnel(); animateTunnel(); }
-        function stopTunnel() { if (!tunnelAnimationId) return; cancelAnimationFrame(tunnelAnimationId); tunnelAnimationId = null; if (tunnelCanvas) tunnelCanvas.style.display = 'none'; }
-        function setupFireflies() { if (!firefliesCanvas) return; firefliesCanvas.width = window.innerWidth; firefliesCanvas.height = window.innerHeight; firefliesCtx = firefliesCanvas.getContext('2d'); fireflies = []; for (let i = 0; i < 100; i++) { fireflies.push({ x: Math.random() * firefliesCanvas.width, y: Math.random() * firefliesCanvas.height, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, size: Math.random() * 3 + 1, brightness: 0 }); } }
-        function animateFireflies() { if (!firefliesCtx) return; const w = firefliesCanvas.width; const h = firefliesCanvas.height; firefliesCtx.fillStyle = '#001'; firefliesCtx.fillRect(0, 0, w, h); fireflies.forEach(f => { f.x += f.vx; f.y += f.vy; f.brightness = Math.max(0, f.brightness + (Math.random() > 0.95 ? 0.5 : -0.05)); if (f.x < 0 || f.x > w) f.vx *= -1; if (f.y < 0 || f.y > h) f.vy *= -1; firefliesCtx.fillStyle = `rgba(255, 255, 100, ${f.brightness})`; firefliesCtx.beginPath(); firefliesCtx.arc(f.x, f.y, f.size, 0, Math.PI * 2); firefliesCtx.fill(); }); firefliesAnimationId = requestAnimationFrame(animateFireflies); }
-        function startFireflies() { if (firefliesAnimationId) return; if (!firefliesCanvas) return; firefliesCanvas.style.display = 'block'; setupFireflies(); animateFireflies(); }
-        function stopFireflies() { if (!firefliesAnimationId) return; cancelAnimationFrame(firefliesAnimationId); firefliesAnimationId = null; if (firefliesCanvas) firefliesCanvas.style.display = 'none'; }
-        function setupBubbles() { if (!bubblesCanvas) return; bubblesCanvas.width = window.innerWidth; bubblesCanvas.height = window.innerHeight; bubblesCtx = bubblesCanvas.getContext('2d'); bubbles = []; for (let i = 0; i < 50; i++) { bubbles.push({ x: Math.random() * bubblesCanvas.width, y: bubblesCanvas.height + Math.random() * 100, r: Math.random() * 10 + 5, speed: Math.random() * 2 + 1 }); } }
-        function animateBubbles() { if (!bubblesCtx) return; const w = bubblesCanvas.width; const h = bubblesCanvas.height; bubblesCtx.fillStyle = '#005f73'; bubblesCtx.fillRect(0, 0, w, h); bubbles.forEach(b => { b.y -= b.speed; b.x += Math.sin(b.y / 50); if (b.y < -b.r) { b.y = h + b.r; b.x = Math.random() * w; } bubblesCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)'; bubblesCtx.lineWidth = 2; bubblesCtx.beginPath(); bubblesCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2); bubblesCtx.stroke(); }); bubblesAnimationId = requestAnimationFrame(animateBubbles); }
-        function startBubbles() { if (bubblesAnimationId) return; if (!bubblesCanvas) return; bubblesCanvas.style.display = 'block'; setupBubbles(); animateBubbles(); }
-        function stopBubbles() { if (!bubblesAnimationId) return; cancelAnimationFrame(bubblesAnimationId); bubblesAnimationId = null; if (bubblesCanvas) bubblesCanvas.style.display = 'none'; }
-        function setupWarpSpeed() { if (!warpspeedCanvas) return; warpspeedCanvas.width = window.innerWidth; warpspeedCanvas.height = window.innerHeight; warpspeedCtx = warpspeedCanvas.getContext('2d'); warpStars = []; for (let i = 0; i < 500; i++) { warpStars.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() }); } }
-        function animateWarpSpeed() { if (!warpspeedCtx) return; const w = warpspeedCanvas.width; const h = warpspeedCanvas.height; const cx = w / 2; const cy = h / 2; warpspeedCtx.fillStyle = 'rgba(0,0,0,0.2)'; warpspeedCtx.fillRect(0, 0, w, h); warpspeedCtx.strokeStyle = 'white'; warpStars.forEach(s => { s.z -= 0.01; if (s.z <= 0) { s.x = Math.random() * 2 - 1; s.y = Math.random() * 2 - 1; s.z = 1; } const px = s.x / s.z * cx + cx; const py = s.y / s.z * cy + cy; const px2 = s.x / (s.z + 0.01) * cx + cx; const py2 = s.y / (s.z + 0.01) * cy + cy; warpspeedCtx.lineWidth = (1 - s.z) * 3; warpspeedCtx.beginPath(); warpspeedCtx.moveTo(px, py); warpspeedCtx.lineTo(px2, py2); warpspeedCtx.stroke(); }); warpspeedAnimationId = requestAnimationFrame(animateWarpSpeed); }
-        function startWarpSpeed() { if (warpspeedAnimationId) return; if (!warpspeedCanvas) return; warpspeedCanvas.style.display = 'block'; setupWarpSpeed(); animateWarpSpeed(); }
-        function stopWarpSpeed() { if (!warpspeedAnimationId) return; cancelAnimationFrame(warpspeedAnimationId); warpspeedAnimationId = null; if (warpspeedCanvas) warpspeedCanvas.style.display = 'none'; }
-        function setupHexGrid() { if (!hexgridCanvas) return; hexgridCanvas.width = window.innerWidth; hexgridCanvas.height = window.innerHeight; hexgridCtx = hexgridCanvas.getContext('2d'); hexgridTime = 0; }
-        function animateHexGrid() { if (!hexgridCtx) return; const w = hexgridCanvas.width; const h = hexgridCanvas.height; hexgridTime += 0.02; hexgridCtx.fillStyle = '#111'; hexgridCtx.fillRect(0, 0, w, h); const size = 30; const hexHeight = size * Math.sqrt(3); for (let row = 0; row < h / hexHeight + 1; row++) { for (let col = 0; col < w / (size * 1.5) + 1; col++) { const x = col * size * 1.5; const y = row * hexHeight + (col % 2) * (hexHeight / 2); const dx = x - w / 2; const dy = y - h / 2; const dist = Math.sqrt(dx * dx + dy * dy); const pulse = Math.sin(dist * 0.01 - hexgridTime) * 0.5 + 0.5; hexgridCtx.strokeStyle = `hsla(180, 100%, 50%, ${pulse})`; hexgridCtx.lineWidth = 1; hexgridCtx.beginPath(); for (let i = 0; i < 6; i++) { const angle = (Math.PI / 3) * i; hexgridCtx.lineTo(x + size * Math.cos(angle), y + size * Math.sin(angle)); } hexgridCtx.closePath(); hexgridCtx.stroke(); } } hexgridAnimationId = requestAnimationFrame(animateHexGrid); }
-        function startHexGrid() { if (hexgridAnimationId) return; if (!hexgridCanvas) return; hexgridCanvas.style.display = 'block'; setupHexGrid(); animateHexGrid(); }
-        function stopHexGrid() { if (!hexgridAnimationId) return; cancelAnimationFrame(hexgridAnimationId); hexgridAnimationId = null; if (hexgridCanvas) hexgridCanvas.style.display = 'none'; }
+        function setupLaserGrid() { if (!laserGridCanvas) return; laserGridCanvas.width = window.innerWidth; laserGridCanvas.height = window.innerHeight; laserGridCtx = laserGridCanvas.getContext('2d'); laserGridTime = 0; }
+        function animateLaserGrid() { if (!laserGridCtx) return; const w = laserGridCanvas.width; const h = laserGridCanvas.height; laserGridTime += 0.02; laserGridCtx.fillStyle = '#00001a'; laserGridCtx.fillRect(0, 0, w, h); const horizon = h / 2.2; for(let i = 0; i < 40; i++) { const p = 1 - (i / 40); laserGridCtx.strokeStyle = `rgba(255, 0, 255, ${p * 0.5})`; laserGridCtx.lineWidth = p * 2; laserGridCtx.beginPath(); const y = horizon + Math.pow(i, 1.8); laserGridCtx.moveTo(0, y); laserGridCtx.lineTo(w, y); laserGridCtx.stroke(); } laserGridCtx.strokeStyle = '#00ffff'; for (let i = 0; i < 40; i++) { const p = i / 40; laserGridCtx.beginPath(); laserGridCtx.moveTo(w / 2, horizon); laserGridCtx.lineTo(w / 2 + Math.tan(p * 1.4 - 0.7) * w, h); laserGridCtx.stroke(); } laserGridAnimationId = requestAnimationFrame(animateLaserGrid); }
+        function startLaserGrid() { if (laserGridAnimationId) return; if (!laserGridCanvas) return; laserGridCanvas.style.display = 'block'; setupLaserGrid(); animateLaserGrid(); }
+        function stopLaserGrid() { if (!laserGridAnimationId) return; cancelAnimationFrame(laserGridAnimationId); laserGridAnimationId = null; if (laserGridCanvas) laserGridCanvas.style.display = 'none'; }
+        function setupNeonPalms() { if (!neonPalmsCanvas) return; neonPalmsCanvas.width = window.innerWidth; neonPalmsCanvas.height = window.innerHeight; neonPalmsCtx = neonPalmsCanvas.getContext('2d'); neonPalmsTime = 0; }
+        function animateNeonPalms() { if (!neonPalmsCtx) return; const w = neonPalmsCanvas.width; const h = neonPalmsCanvas.height; neonPalmsTime += 0.01; const bgGrad = neonPalmsCtx.createLinearGradient(0, 0, 0, h); bgGrad.addColorStop(0, '#10002b'); bgGrad.addColorStop(0.5, '#2c003e'); bgGrad.addColorStop(1, '#ff00ff'); neonPalmsCtx.fillStyle = bgGrad; neonPalmsCtx.fillRect(0, 0, w, h); neonPalmsCtx.strokeStyle = '#00ffff'; neonPalmsCtx.lineWidth = 3; [-w * 0.1, w * 0.6].forEach(baseX => { neonPalmsCtx.beginPath(); neonPalmsCtx.moveTo(baseX, h); for(let i = 0; i < 80; i++) { neonPalmsCtx.lineTo(baseX + i, h - i * 1.5); } neonPalmsCtx.stroke(); for(let i = 0; i < 8; i++) { neonPalmsCtx.beginPath(); const angle = (i/7) * Math.PI - (Math.PI / 14) + Math.sin(neonPalmsTime + baseX) * 0.1; const len = 100 + i % 2 * 20; neonPalmsCtx.moveTo(baseX + 79, h - 118.5); neonPalmsCtx.quadraticCurveTo(baseX + 79 + Math.cos(angle) * len * 0.5, h - 118.5 - Math.sin(angle) * len * 0.5, baseX + 79 + Math.cos(angle) * len, h - 118.5 - Math.sin(angle) * len); neonPalmsCtx.stroke(); } }); neonPalmsAnimationId = requestAnimationFrame(animateNeonPalms); }
+        function startNeonPalms() { if (neonPalmsAnimationId) return; if (!neonPalmsCanvas) return; neonPalmsCanvas.style.display = 'block'; setupNeonPalms(); animateNeonPalms(); }
+        function stopNeonPalms() { if (!neonPalmsAnimationId) return; cancelAnimationFrame(neonPalmsAnimationId); neonPalmsAnimationId = null; if (neonPalmsCanvas) neonPalmsCanvas.style.display = 'none'; }
+        function setupMemphis() { if (!memphisCanvas) return; memphisCanvas.width = window.innerWidth; memphisCanvas.height = window.innerHeight; memphisCtx = memphisCanvas.getContext('2d'); memphisShapes = []; const colors = ['#ffc107', '#00bcd4', '#e91e63', '#4caf50', '#3f51b5']; for (let i = 0; i < 50; i++) { memphisShapes.push({ type: ['circle', 'rect', 'triangle', 'squiggle'][Math.floor(Math.random() * 4)], x: Math.random() * memphisCanvas.width, y: Math.random() * memphisCanvas.height, size: Math.random() * 50 + 20, color: colors[Math.floor(Math.random() * colors.length)], angle: Math.random() * Math.PI * 2, speed: (Math.random() - 0.5) * 0.01 }); } }
+        function animateMemphis() { if (!memphisCtx) return; const w = memphisCanvas.width; const h = memphisCanvas.height; memphisCtx.fillStyle = '#f0f0f0'; memphisCtx.fillRect(0, 0, w, h); memphisShapes.forEach(s => { s.angle += s.speed; memphisCtx.fillStyle = s.color; memphisCtx.save(); memphisCtx.translate(s.x, s.y); memphisCtx.rotate(s.angle); if (s.type === 'rect') { memphisCtx.fillRect(-s.size / 2, -s.size / 2, s.size, s.size); } else if (s.type === 'circle') { memphisCtx.beginPath(); memphisCtx.arc(0, 0, s.size / 2, 0, Math.PI * 2); memphisCtx.fill(); } else if (s.type === 'triangle') { memphisCtx.beginPath(); memphisCtx.moveTo(0, -s.size / 2); memphisCtx.lineTo(-s.size / 2, s.size / 2); memphisCtx.lineTo(s.size / 2, s.size / 2); memphisCtx.closePath(); memphisCtx.fill(); } else if (s.type === 'squiggle') { memphisCtx.strokeStyle = s.color; memphisCtx.lineWidth = s.size/5; memphisCtx.beginPath(); memphisCtx.moveTo(-s.size/2, 0); memphisCtx.quadraticCurveTo(0, -s.size/2, 0, 0); memphisCtx.quadraticCurveTo(0, s.size/2, s.size/2, 0); memphisCtx.stroke(); } memphisCtx.restore(); }); memphisAnimationId = requestAnimationFrame(animateMemphis); }
+        function startMemphis() { if (memphisAnimationId) return; if (!memphisCanvas) return; memphisCanvas.style.display = 'block'; setupMemphis(); animateMemphis(); }
+        function stopMemphis() { if (!memphisAnimationId) return; cancelAnimationFrame(memphisAnimationId); memphisAnimationId = null; if (memphisCanvas) memphisCanvas.style.display = 'none'; }
+        function setupCassette() { if (!cassetteCanvas) return; cassetteCanvas.width = window.innerWidth; cassetteCanvas.height = window.innerHeight; cassetteCtx = cassetteCanvas.getContext('2d'); cassetteTime = 0; }
+        function animateCassette() { if (!cassetteCtx) return; const w = cassetteCanvas.width; const h = cassetteCanvas.height; cassetteTime += 0.1; cassetteCtx.fillStyle = '#444'; cassetteCtx.fillRect(0, 0, w, h); cassetteCtx.save(); cassetteCtx.translate(w / 2, h / 2); cassetteCtx.fillStyle = '#aaa'; cassetteCtx.fillRect(-150, -90, 300, 180); cassetteCtx.fillStyle = '#222'; cassetteCtx.fillRect(-140, -80, 280, 160); cassetteCtx.fillStyle = '#fff'; cassetteCtx.fillRect(-130, -70, 260, 50); cassetteCtx.fillStyle = '#222'; for (let i = 0; i < 2; i++) { const x = -75 + i * 150; cassetteCtx.beginPath(); cassetteCtx.arc(x, 20, 30, 0, Math.PI * 2); cassetteCtx.fill(); cassetteCtx.save(); cassetteCtx.translate(x, 20); cassetteCtx.rotate(cassetteTime); cassetteCtx.fillStyle = '#444'; for (let j = 0; j < 6; j++) { cassetteCtx.fillRect(-5, -25, 10, 50); cassetteCtx.rotate(Math.PI / 3); } cassetteCtx.restore(); } cassetteCtx.restore(); cassetteAnimationId = requestAnimationFrame(animateCassette); }
+        function startCassette() { if (cassetteAnimationId) return; if (!cassetteCanvas) return; cassetteCanvas.style.display = 'block'; setupCassette(); animateCassette(); }
+        function stopCassette() { if (!cassetteAnimationId) return; cancelAnimationFrame(cassetteAnimationId); cassetteAnimationId = null; if (cassetteCanvas) cassetteCanvas.style.display = 'none'; }
+        function setupEightBitCity() { if (!eightBitCityCanvas) return; const w = eightBitCityCanvas.width = window.innerWidth; const h = eightBitCityCanvas.height = window.innerHeight; eightBitCityCtx = eightBitCityCanvas.getContext('2d'); eightBitCityBuildings = []; const bw = 40; for (let i = 0; i < w/bw; i++) { eightBitCityBuildings.push({ x: i * bw, h: Math.random() * (h * 0.6) + h * 0.1 }); } }
+        function animateEightBitCity() { if (!eightBitCityCtx) return; const w = eightBitCityCanvas.width; const h = eightBitCityCanvas.height; eightBitCityCtx.fillStyle = '#000022'; eightBitCityCtx.fillRect(0, 0, w, h); eightBitCityBuildings.forEach(b => { eightBitCityCtx.fillStyle = '#222'; eightBitCityCtx.fillRect(b.x, h - b.h, 40, b.h); if (Math.random() > 0.7) { eightBitCityCtx.fillStyle = '#ffff00'; eightBitCityCtx.fillRect(b.x + Math.floor(Math.random() * 7) * 4 + 4, h - b.h + Math.floor(Math.random() * (b.h / 6)) * 6, 2, 4); } }); eightBitCityAnimationId = requestAnimationFrame(animateEightBitCity); }
+        function startEightBitCity() { if (eightBitCityAnimationId) return; if (!eightBitCityCanvas) return; eightBitCityCanvas.style.display = 'block'; setupEightBitCity(); animateEightBitCity(); }
+        function stopEightBitCity() { if (!eightBitCityAnimationId) return; cancelAnimationFrame(eightBitCityAnimationId); eightBitCityAnimationId = null; if (eightBitCityCanvas) eightBitCityCanvas.style.display = 'none'; }
 
 
         /**
@@ -1273,7 +1310,7 @@
             stopInkBlot(); stopCosmic(); stopMusicViz(); stopBioForest(); stopWatery();
             stopStainedGlass(); stopSwarm(); stopGlitch(); stopAurora(); stopConstellation();
             stopSynthwave(); stopNebula(); stopJungle(); stopCityscape(); stopPaint();
-            stopTunnel(); stopFireflies(); stopBubbles(); stopWarpSpeed(); stopHexGrid();
+            stopLaserGrid(); stopNeonPalms(); stopMemphis(); stopCassette(); stopEightBitCity();
             document.body.style.backgroundImage = 'none';
 
             let backgroundSet = false;
@@ -1288,8 +1325,8 @@
                 'board-22': startSwarm, 'board-23': startGlitch, 'board-24': startAurora,
                 'board-25': startConstellation, 'board-26': startSynthwave, 'board-27': startNebula,
                 'board-28': startJungle, 'board-29': startCityscape, 'board-30': startPaint,
-                'board-31': startTunnel, 'board-32': startFireflies, 'board-33': startBubbles,
-                'board-34': startWarpSpeed, 'board-35': startHexGrid,
+                'board-31': startLaserGrid, 'board-32': startNeonPalms, 'board-33': startMemphis,
+                'board-34': startCassette, 'board-35': startEightBitCity,
             };
 
             if (backgroundMap[selectedBoard]) {
@@ -1392,6 +1429,7 @@
             document.querySelectorAll('[data-temp-board]').forEach(el => {
                 const boardId = el.dataset.tempBoard;
                 const i = BOARD_DATA.findIndex(b => b.id === boardId);
+                const boardData = BOARD_DATA[i];
                 const previews = {
                     'board-1': { bg: 'linear-gradient(45deg, #3a1c71, #d76d77, #ffaf7b)', icon: '💧' },
                     'board-2': { bg: 'black', icon: '✨' },
@@ -1412,12 +1450,22 @@
                     'board-17': { bg: 'black', icon: '💫' },
                     'board-18': { bg: 'black', icon: '🎵', color: 'magenta' },
                     'board-19': { bg: '#0a1a0a', icon: '🍄', color: 'cyan' },
-                    'board-20': { bg: '#3498db', icon: '💧' },
-                    'board-21': { bg: 'black', icon: '✨' },
-                    'board-22': { bg: 'black', icon: '👾' },
+                    'board-20': { bg: 'black', icon: '💎', color: 'white' },
+                    'board-21': { bg: '#3498db', icon: '💧' },
+                    'board-22': { bg: 'black', icon: '✨' },
                     'board-23': { bg: 'black', icon: ' glitch ' , color: '#f0f'},
                     'board-24': { bg: '#111', icon: '🌌' },
-                    'board-25': { bg: 'black', icon: '⭐' }
+                    'board-25': { bg: 'black', icon: '⭐' },
+                    'board-26': { bg: '#21003c', icon: '🌇', color: '#ff00ff' },
+                    'board-27': { bg: '#000010', icon: '☄️' },
+                    'board-28': { bg: '#0c2e12', icon: '🌿', color: '#3a5f0b' },
+                    'board-29': { bg: '#0a0a1a', icon: '🏙️', color: '#ffffaa' },
+                    'board-30': { bg: '#f0f0f0', icon: '🎨' },
+                    'board-31': { bg: '#00001a', icon: '🏁', color: '#ff00ff' },
+                    'board-32': { bg: '#10002b', icon: '🌴', color: '#00ffff' },
+                    'board-33': { bg: '#f0f0f0', icon: '🎉', color: '#e91e63' },
+                    'board-34': { bg: '#444', icon: '📼', color: '#fff' },
+                    'board-35': { bg: '#000022', icon: '💾', color: '#ffff00' },
                 };
                 if (previews[boardId]) {
                     el.style.background = previews[boardId].bg;
@@ -1429,6 +1477,24 @@
                     el.style.backgroundImage = `linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%), linear-gradient(-45deg, rgba(0,0,0,0.1) 25%, transparent 25%)`;
                     el.innerHTML = '';
                 }
+            });
+
+            // Populate the music options grid
+            musicSelector.innerHTML = '';
+            MUSIC_DATA.forEach((trackData) => {
+                const option = document.createElement('div');
+                option.className = 'options-grid-item';
+                option.style.cssText = `display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: 12px; padding: 10px; box-sizing: border-box; text-align: center; background-color: #333; color: white;`;
+
+                if (unlockedTracks.includes(trackData.id)) {
+                    option.innerHTML = `<span style="font-size: 40px;">🎵</span><span>${trackData.name}</span>`;
+                    option.title = `Unlocked: ${trackData.name}`;
+                } else {
+                    option.classList.add('locked');
+                    option.innerHTML = `<span>${trackData.name}</span>`;
+                    option.title = 'Locked';
+                }
+                musicSelector.appendChild(option);
             });
         }
         
@@ -1597,6 +1663,9 @@
                 isPopupVisible = false;
                 showNextUnlockPopup();
             }
+             if (e.target == resetConfirmModal) {
+                resetConfirmModal.style.display = 'none';
+            }
         });
 
         achievementsBtn.addEventListener('click', () => {
@@ -1729,14 +1798,15 @@
             }
             
             let moveSuccessful = false;
-            const draggedAce = draggedCardInfo.draggedCards.length === 1 && draggedCardInfo.draggedCards[0].rank === 1;
+            const draggedCard = draggedCardInfo.draggedCards[0];
+            const isAce = draggedCard.rank === 1;
+            const isFoundationAreaDrop = dropTargetEl && dropTargetEl.closest('.foundation-area');
 
             // Case 1: Dragged an Ace and dropped it anywhere on the foundation area
-            if (draggedAce && dropTargetEl && dropTargetEl.closest('.foundation-area')) {
-                const ace = draggedCardInfo.draggedCards[0];
-                // Find the correct empty foundation pile for this Ace
+            if (isAce && isFoundationAreaDrop) {
+                // Find the first valid foundation pile for this Ace
                 for (let i = 0; i < foundations.length; i++) {
-                    if (isValidFoundationMove(ace, i)) {
+                    if (isValidFoundationMove(draggedCard, i)) {
                         moveSuccessful = handleMove('foundation', i);
                         break;
                     }
@@ -1766,7 +1836,7 @@
                 }
             }
 
-            if (!moveSuccessful) {
+            if (!moveSuccessful && draggedCardInfo) { // Only penalize if a move was attempted
                 loseLife();
             }
 
@@ -2041,7 +2111,18 @@
 
             loseLife(); // If no valid auto-move was found
         }
-        function isValidFoundationMove(card, foundationIndex) { if (card.value === 'WILD') return true; const foundationPile = foundations[foundationIndex]; const foundationSuit = SUITS[foundationIndex]; if (card.suit !== foundationSuit) return false; if (foundationPile.length === 0) return card.rank === 1; const topCard = foundationPile[foundationPile.length - 1]; return card.rank === topCard.rank + 1; }
+        function isValidFoundationMove(card, foundationIndex) {
+            if (card.value === 'WILD') return true;
+            const foundationPile = foundations[foundationIndex];
+
+            if (foundationPile.length === 0) {
+                const suitAlreadyPlaced = foundations.some(pile => pile.length > 0 && pile[0].suit === card.suit);
+                return card.rank === 1 && !suitAlreadyPlaced;
+            } else {
+                const topCard = foundationPile[foundationPile.length - 1];
+                return card.suit === topCard.suit && card.rank === topCard.rank + 1;
+            }
+        }
         function isValidTableauMove(card, tableauIndex) { if (card.value === 'WILD') return true; const tableauPile = tableau[tableauIndex]; if (tableauPile.length === 0) return card.rank === 13; const topCard = tableauPile[tableauPile.length - 1]; return card.rank === topCard.rank - 1 && card.color !== topCard.color; }
         
         // --- Wild Card ---
@@ -2235,6 +2316,7 @@
             achievementScore = Object.values(ACHIEVEMENTS).reduce((sum, ach) => sum + ach.points, 0);
             hintsAvailable = 99;
             undosAvailable = 99;
+            unlockedTracks = MUSIC_DATA.map(t => t.id);
             
             checkLevelUp(false); // Update to max level silently
             updateCardStyles(); // Refresh options UI
@@ -2342,6 +2424,19 @@
                                 saveProgress();
                             };
                             queueUnlockPopup('New Card Back Unlocked!', `You've unlocked the <b>${cardBackToUnlock.name}</b> card back!`, applyCallback);
+                        }
+
+                        // Handle music unlocks
+                        if (l % 2 === 1) { // Unlock on odd levels: 1, 3, 5...
+                            const trackIndex = (l - 1) / 2;
+                            const trackToUnlock = MUSIC_DATA[trackIndex];
+                            if (trackToUnlock && !unlockedTracks.includes(trackToUnlock.id)) {
+                                unlockedTracks.push(trackToUnlock.id);
+                                const applyCallback = () => {
+                                    playTrackNow(trackToUnlock.url);
+                                };
+                                queueUnlockPopup('🎵 New Music Unlocked!', `<b>${trackToUnlock.name}</b> is now in your playlist!`, applyCallback);
+                            }
                         }
 
                         // Handle hint/undo rewards
@@ -2761,7 +2856,7 @@
             } else {
                 unmutedIcon.style.display = 'block';
                 mutedIcon.style.display = 'none';
-                if(playSound) sounds.click.triggerAttackRelease("C3", "8n");
+                if(playSound && sounds) sounds.click.triggerAttackRelease("C3", "8n");
             }
             saveProgress();
         }
@@ -2770,6 +2865,68 @@
             isMuted = !isMuted;
             updateMuteState();
         });
+
+        // --- Music Logic ---
+        function playNextTrack() {
+            if (currentTrackPlayer) {
+                currentTrackPlayer.dispose();
+            }
+        
+            if (shuffledPlaylist.length === 0) {
+                shuffledPlaylist = unlockedTracks.map(trackId => MUSIC_DATA.find(t => t.id === trackId).url);
+                shuffleArray(shuffledPlaylist);
+                currentTrackIndex = -1;
+            }
+            
+            currentTrackIndex = (currentTrackIndex + 1) % shuffledPlaylist.length;
+            const nextTrackUrl = shuffledPlaylist[currentTrackIndex];
+            
+            currentTrackPlayer = new Tone.Player({
+                url: nextTrackUrl,
+                autostart: true,
+                onstop: () => {
+                    if (Tone.Transport.state === 'started') {
+                        playNextTrack();
+                    }
+                }
+            }).toDestination();
+        }
+        
+        function startMainPlaylist() {
+            if (Tone.Transport.state === 'started') {
+                Tone.Transport.stop();
+                if(currentTrackPlayer) currentTrackPlayer.stop();
+            }
+            
+            shuffledPlaylist = unlockedTracks.map(trackId => MUSIC_DATA.find(t => t.id === trackId).url);
+            shuffleArray(shuffledPlaylist);
+            currentTrackIndex = -1;
+            
+            Tone.Transport.start();
+            playNextTrack();
+        }
+
+        function playTrackNow(trackUrl) {
+            if (currentTrackPlayer) {
+                currentTrackPlayer.stop();
+                currentTrackPlayer.dispose();
+            }
+            currentTrackPlayer = new Tone.Player({
+                url: trackUrl,
+                autostart: true,
+                onstop: () => {
+                    if (Tone.Transport.state === 'started') {
+                        playNextTrack();
+                    }
+                }
+            }).toDestination();
+            
+            // Rebuild the shuffled playlist to include the new track immediately
+            shuffledPlaylist = unlockedTracks.map(trackId => MUSIC_DATA.find(t => t.id === trackId).url);
+            shuffleArray(shuffledPlaylist);
+            // Set the current track index to the newly played track to avoid repetition
+            currentTrackIndex = shuffledPlaylist.indexOf(trackUrl);
+        }
 
         // --- Reset Progress Logic ---
         resetProgressBtn.addEventListener('click', () => {
@@ -2781,18 +2938,7 @@
         });
 
         resetConfirmBtn.addEventListener('click', () => {
-            localStorage.removeItem('solitaireWinCount');
-            localStorage.removeItem('solitaireWinStreak');
-            localStorage.removeItem('solitaireUnlockedBacks');
-            localStorage.removeItem('solitaireSelectedBack');
-            localStorage.removeItem('solitaireUnlockedBoards');
-            localStorage.removeItem('solitaireSelectedBoard');
-            localStorage.removeItem('solitairePlayerXP');
-            localStorage.removeItem('solitaireHintsAvailable');
-            localStorage.removeItem('solitaireUndosAvailable');
-            localStorage.removeItem('solitaireAchievements');
-            localStorage.removeItem('solitaireAchievementScore');
-            localStorage.removeItem('solitaireIsMuted');
+            localStorage.clear();
             location.reload();
         });
 
@@ -2833,11 +2979,11 @@
             if (jungleAnimationId) setupJungle();
             if (cityscapeAnimationId) setupCityscape();
             if (paintAnimationId) setupPaint();
-            if (tunnelAnimationId) setupTunnel();
-            if (firefliesAnimationId) setupFireflies();
-            if (bubblesAnimationId) setupBubbles();
-            if (warpspeedAnimationId) setupWarpSpeed();
-            if (hexgridAnimationId) setupHexGrid();
+            if (laserGridAnimationId) setupLaserGrid();
+            if (neonPalmsAnimationId) setupNeonPalms();
+            if (memphisAnimationId) setupMemphis();
+            if (cassetteAnimationId) setupCassette();
+            if (eightBitCityAnimationId) setupEightBitCity();
         });
 
         window.addEventListener('mousemove', (e) => {
