@@ -288,14 +288,7 @@
         .card.black { color: #000000; }
         .tableau-pile { position: relative; width: var(--card-width); min-height: var(--card-height); }
         .tableau-pile .card { position: absolute; top: 0; left: 0; }
-        .card.wild-card { background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet); color: white; justify-content: center; align-items: center; font-size: 24px; text-shadow: 1px 1px 2px black; }
-        .card.wild-transform { animation: wild-card-transform 0.5s ease-in-out forwards; }
-        @keyframes wild-card-transform {
-            0% { transform: scale(1) rotate(0); box-shadow: 0 0 10px rgba(255,255,0,0.5); }
-            50% { transform: scale(1.5) rotate(720deg); box-shadow: 0 0 40px 20px rgba(255,255,255,1); opacity: 0.5; }
-            100% { transform: scale(1) rotate(720deg); box-shadow: 0 0 10px rgba(255,255,0,0.5); opacity: 1; }
-        }
-
+        
         .card .card-value { padding: 5px; font-size: clamp(14px, calc(var(--card-width) * 0.28), 28px); line-height: 1; }
         .card .card-value.bottom { align-self: flex-end; transform: rotate(180deg); }
         .card .card-center-suit { display: none; }
@@ -406,7 +399,6 @@
     </style>
 </head>
 <body>
-    <!-- Canvases for animated backgrounds -->
     <canvas id="starfield-canvas"></canvas>
     <canvas id="lavalamp-canvas"></canvas>
     <canvas id="ocean-canvas"></canvas>
@@ -443,22 +435,17 @@
     <canvas id="cassette-canvas"></canvas>
     <canvas id="eightBitCity-canvas"></canvas>
     
-    <!-- Overlay for visual effects -->
     <div id="flash-overlay"></div>
 
-    <!-- Title Screen -->
     <div id="title-screen">
         <div class="title-cards"></div>
         <h1>Klondike Solitaire</h1>
         <button id="start-game-btn">Start Game</button>
     </div>
 
-    <!-- Main Game Container -->
     <div id="game-container">
-        <!-- Canvas for combo text physics -->
         <canvas id="combo-canvas"></canvas>
         
-        <!-- Top bar with stats and controls -->
         <div id="top-bar">
             <div id="player-stats-panel">
                 <div id="xp-container">
@@ -497,7 +484,6 @@
             </div>
         </div>
         
-        <!-- Main game board area -->
         <div id="game-board-container">
             <div id="message-box"></div>
             <div id="game-board">
@@ -521,7 +507,6 @@
         <footer style="margin-top: auto; padding-top: 20px;">Created by PM Lewis</footer>
     </div>
 
-    <!-- Modals for game interaction -->
     <div id="draw-select-modal" class="modal-overlay">
         <div class="modal-content">
             <h2>Choose Draw Style</h2>
@@ -794,7 +779,6 @@
             clearPile: { name: "Clean Sweep", desc: "Clear a tableau pile of all cards.", xp: 10, icon: "🧹", points: 20 },
             combo5: { name: "Chain Reaction", desc: "Achieve a x5 combo.", xp: 10, icon: "🔥", points: 20 },
             speedy: { name: "Quick Draw", desc: "Win a game in under 5 minutes.", xp: 25, icon: "⏱️", points: 50 },
-            wildPlayed: { name: "Feeling Wild", desc: "Play the Wild Card.", xp: 10, icon: "🃏", points: 20 },
             win1: { name: "First Victory", desc: "Win your first game.", xp: 10, icon: "🥇", points: 20 },
             win5: { name: "Five-Timer", desc: "Win 5 games.", xp: 20, icon: "🖐️", points: 50 },
             win10: { name: "Decade of Dominance", desc: "Win 10 games.", xp: 50, icon: "🔟", points: 100 },
@@ -805,7 +789,6 @@
             fullStack2: { name: "Major Major", desc: "Build two full stacks in one game.", xp: 50, icon: "🏛️🏛️", points: 50 },
             firstUndo: { name: "Second Thoughts", desc: "Use the Undo button for the first time.", xp: 1, icon: "⎌", points: 10 },
             firstHint: { name: "A Little Help?", desc: "Use the Hint button for the first time.", xp: 1, icon: "💡", points: 10 },
-            wildWin: { name: "Joker's Gambit", desc: "Win a game by playing a Wild Card as the last card.", xp: 50, icon: "🃏", points: 100, secret: true },
             level2: { name: "Rookie", desc: "Reach Level 2.", xp: 10, icon: "⭐", points: 10 },
             level5: { name: "Veteran", desc: "Reach Level 5.", xp: 20, icon: "⭐⭐", points: 20 },
             level10: { name: "Solitaire Pro", desc: "Reach Level 10.", xp: 50, icon: "⭐⭐⭐", points: 50 },
@@ -1015,7 +998,7 @@
                 setupPhysics();
 
                 if (!titleScreen.classList.contains('hidden')) {
-                    introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/intro.mp3").toDestination();
+                    introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/00.mp3").toDestination();
                     introPlayer.loop = true;
                     introPlayer.autostart = true;
                     updateMuteState(false);
@@ -1245,7 +1228,7 @@
         function startConstellation() { if (constellationAnimationId) return; if (!constellationCanvas) return; constellationCanvas.style.display = 'block'; setupConstellation(); animateConstellation(); }
         function stopConstellation() { if (!constellationAnimationId) return; cancelAnimationFrame(constellationAnimationId); constellationAnimationId = null; if (constellationCanvas) constellationCanvas.style.display = 'none'; }
         function setupSynthwave() { if (!synthwaveCanvas) return; synthwaveCanvas.width = window.innerWidth; synthwaveCanvas.height = window.innerHeight; synthwaveCtx = synthwaveCanvas.getContext('2d'); synthwaveTime = 0; }
-        function animateSynthwave() { if (!synthwaveCtx) return; const w = synthwaveCanvas.width; const h = synthwaveCanvas.height; synthwaveTime += 0.01; synthwaveCtx.fillStyle = '#21003c'; synthwaveCtx.fillRect(0, 0, w, h); const sunGradient = synthwaveCtx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, 200); sunGradient.addColorStop(0, '#ffcc00'); sunGradient.addColorStop(1, 'rgba(255, 100, 0, 0)'); synthwaveCtx.fillStyle = sunGradient; synthwaveCtx.fillRect(0, 0, w, h); synthwaveCtx.strokeStyle = '#ff00ff'; synthwaveCtx.lineWidth = 2; for (let i = 0; i < 20; i++) { const y = h / 2 + i * i; const p = (y - h / 2) / (h / 2); synthwaveCtx.beginPath(); synthwaveCtx.moveTo(0, y); synthwaveCtx.lineTo(w, y); synthwaveCtx.stroke(); } for (let i = -20; i < 20; i++) { synthwaveCtx.beginPath(); synthwaveCtx.moveTo(w / 2, h / 2); synthwaveCtx.lineTo(w / 2 + i * w / 20, h); synthwaveCtx.stroke(); } synthwaveAnimationId = requestAnimationFrame(animateSynthwave); }
+        function animateSynthwave() { if (!synthwaveCtx) return; const w = synthwaveCanvas.width; const h = synthwaveCanvas.height; synthwaveTime += 0.01; synthwaveCtx.fillStyle = '#21003c'; synthwaveCtx.fillRect(0, 0, w, h); const sunGradient = synthwaveCtx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, 200); sunGradient.addColorStop(0, '#ffcc00'); sunGradient.addColorStop(1, 'rgba(255, 100, 0, 0)'); synthwaveCtx.fillStyle = sunGradient; synthwaveCtx.fillRect(0, 0, w, h); synthwaveCtx.strokeStyle = '#ff00ff'; synthwaveCtx.lineWidth = 2; for (let i = 0; i < 20; i++) { const y = h / 2 + i * i; const p = (y - h / 2) / (h / 2); synthwaveCtx.beginPath(); synthwaveCtx.moveTo(0, y); synthwaveCtx.lineTo(w, y); synthwaveCtx.stroke(); } for (let i = -20; i < 20; i++) { synthwaveCtx.beginPath(); synthwaveCtx.moveTo(w / 2, h / 2); synthwaveCtx.lineTo(w / 2 + Math.tan(p * 1.4 - 0.7) * w, h); synthwaveCtx.stroke(); } synthwaveAnimationId = requestAnimationFrame(animateSynthwave); }
         function startSynthwave() { if (synthwaveAnimationId) return; if (!synthwaveCanvas) return; synthwaveCanvas.style.display = 'block'; setupSynthwave(); animateSynthwave(); }
         function stopSynthwave() { if (!synthwaveAnimationId) return; cancelAnimationFrame(synthwaveAnimationId); synthwaveAnimationId = null; if (synthwaveCanvas) synthwaveCanvas.style.display = 'none'; }
         function setupNebula() { if (!nebulaCanvas) return; nebulaCanvas.width = window.innerWidth; nebulaCanvas.height = window.innerHeight; nebulaCtx = nebulaCanvas.getContext('2d'); nebulaParticles = []; for (let i = 0; i < 200; i++) { nebulaParticles.push({ x: Math.random() * nebulaCanvas.width, y: Math.random() * nebulaCanvas.height, size: Math.random() * 2, hue: Math.random() * 60 + 240 }); } }
@@ -1489,7 +1472,7 @@
         }
         
         // --- Core Game Logic ---
-        function createDeck() { let deck = SUITS.flatMap(suit => VALUES.map((value, index) => ({ suit, value, rank: index + 1, color: (suit === '♥' || suit === '♦') ? 'red' : 'black', isFaceUp: false, id: `${value}-${suit}` }))); if (playerLevel >= 5) { deck.push({ suit: '🃏', value: 'WILD', rank: 99, color: 'black', isFaceUp: false, id: 'wild-card-in-deck' }); } return deck; }
+        function createDeck() { return SUITS.flatMap(suit => VALUES.map((value, index) => ({ suit, value, rank: index + 1, color: (suit === '♥' || suit === '♦') ? 'red' : 'black', isFaceUp: false, id: `${value}-${suit}` }))); }
         function shuffleDeck(deck) { for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; } }
         function dealCards(deck) { for (let i = 0; i < 7; i++) { for (let j = i; j < 7; j++) tableau[j].push(deck.pop()); } tableau.forEach(pile => { if (pile.length > 0) pile[pile.length - 1].isFaceUp = true; }); stock = deck; }
         
@@ -1571,17 +1554,10 @@
             const cardEl = document.createElement('div');
             cardEl.className = `card ${card.color}`;
             if (isTopCard) cardEl.classList.add('is-top-card');
-            if (card.value === 'WILD') cardEl.classList.add('wild-card');
             
             cardEl.dataset.cardId = card.id;
             if (card.isFaceUp) {
-                if (card.value === 'WILD') {
-                    cardEl.textContent = 'WILD';
-                    cardEl.style.justifyContent = 'center';
-                    cardEl.style.alignItems = 'center';
-                } else {
-                    cardEl.innerHTML = `<div class="card-value top">${card.value}${card.suit}</div><div class="card-center-suit">${card.suit}<div class="card-center-value">${card.value}</div></div><div class="card-value bottom">${card.value}${card.suit}</div>`;
-                }
+                cardEl.innerHTML = `<div class="card-value top">${card.value}${card.suit}</div><div class="card-center-suit">${card.suit}<div class="card-center-value">${card.value}</div></div><div class="card-value bottom">${card.value}${card.suit}</div>`;
             } else {
                 cardEl.classList.add('face-down');
             }
@@ -1807,7 +1783,7 @@
                     if (targetPileName !== sourcePileName || targetPileIndex !== sourcePileIndex) {
                          moveSuccessful = handleMove(targetPileName, targetPileIndex);
                     } else {
-                         moveSuccessful = true; // Not a real move, but not an error either.
+                        moveSuccessful = true; // Not a real move, but not an error either.
                     }
                 }
             }
@@ -1923,11 +1899,6 @@
             const { sourcePileName, sourcePileIndex, draggedCards } = draggedCardInfo;
             const cardToMove = draggedCards[0];
             
-            if (cardToMove.value === 'WILD') {
-                handleWildCardDrop(cardToMove, targetPileName, targetPileIndex);
-                return true;
-            }
-
             let isValid = false;
             if (targetPileName === 'foundation' && draggedCards.length === 1 && isValidFoundationMove(cardToMove, targetPileIndex)) {
                 sounds.foundationPlace.triggerAttackRelease("C5", "8n");
@@ -2018,7 +1989,7 @@
             if (!cardToMove) return;
 
             const isTopCard = (loc.pileName === 'waste' && loc.cardIndex === waste.length - 1) ||
-                                (loc.pileName === 'tableau' && loc.cardIndex === tableau[loc.pileIndex].length - 1);
+                                  (loc.pileName === 'tableau' && loc.cardIndex === tableau[loc.pileIndex].length - 1);
 
             // Priority 1: Move to a valid foundation.
             if (isTopCard) {
@@ -2088,7 +2059,6 @@
             sounds.error.triggerAttackRelease("G2", "8n");
         }
         function isValidFoundationMove(card, foundationIndex) {
-            if (card.value === 'WILD') return true;
             const foundationPile = foundations[foundationIndex];
 
             if (foundationPile.length === 0) {
@@ -2099,73 +2069,8 @@
                 return card.suit === topCard.suit && card.rank === topCard.rank + 1;
             }
         }
-        function isValidTableauMove(card, tableauIndex) { if (card.value === 'WILD') return true; const tableauPile = tableau[tableauIndex]; if (tableauPile.length === 0) return card.rank === 13; const topCard = tableauPile[tableauPile.length - 1]; return card.rank === topCard.rank - 1 && card.color !== topCard.color; }
+        function isValidTableauMove(card, tableauIndex) { const tableauPile = tableau[tableauIndex]; if (tableauPile.length === 0) return card.rank === 13; const topCard = tableauPile[tableauPile.length - 1]; return card.rank === topCard.rank - 1 && card.color !== topCard.color; }
         
-        // --- Wild Card ---
-        async function handleWildCardDrop(wildCard, targetPileName, targetPileIndex) {
-            let requiredCard = null;
-            if (targetPileName === 'foundation') {
-                const pile = foundations[targetPileIndex];
-                const topCard = pile.length > 0 ? pile[pile.length - 1] : null;
-                const requiredRank = topCard ? topCard.rank + 1 : 1;
-                if (requiredRank > 13) return; // Can't play a wild on a King
-                requiredCard = { rank: requiredRank, suit: SUITS[targetPileIndex], color: (SUITS[targetPileIndex] === '♥' || SUITS[targetPileIndex] === '♦') ? 'red' : 'black' };
-            } else if (targetPileName === 'tableau') {
-                const pile = tableau[targetPileIndex];
-                const topCard = pile.length > 0 ? pile[pile.length - 1] : null;
-                const requiredRank = topCard ? topCard.rank - 1 : 13;
-                if(requiredRank < 1) return; // Can't play a wild on an Ace
-                if (topCard) {
-                    const requiredColor = topCard.color === 'red' ? 'black' : 'red';
-                    const possibleSuit = requiredColor === 'black' ? '♣' : '♥'; // Suit doesn't matter, just need a placeholder
-                    requiredCard = { rank: requiredRank, suit: possibleSuit, color: requiredColor };
-                } else { // Empty tableau pile
-                    requiredCard = { rank: 13, suit: '♠', color: 'black' };
-                }
-            }
-
-            if (requiredCard) {
-                triggerAchievement('wildPlayed');
-                const cardIdToRemove = `${VALUES[requiredCard.rank - 1]}-${requiredCard.suit}`;
-                removeCardFromGame(cardIdToRemove); // Remove the real card from the game
-                
-                const newCard = { ...requiredCard, value: VALUES[requiredCard.rank - 1], id: `wild-${Date.now()}`, isFaceUp: true };
-                
-                const { sourcePileName, sourcePileIndex } = draggedCardInfo;
-                const sourcePile = sourcePileName === 'tableau' ? tableau[sourcePileIndex] : waste;
-                const wildCardEl = document.querySelector(`[data-card-id="${sourcePile[sourcePile.length - 1].id}"]`);
-                
-                wildCardEl.classList.add('wild-transform');
-                await new Promise(resolve => setTimeout(resolve, 250));
-                
-                flashOverlay.classList.add('flash');
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-                sourcePile.pop();
-
-                if (targetPileName === 'foundation') { foundations[targetPileIndex].push(newCard); } 
-                else { tableau[targetPileIndex].push(newCard); }
-                
-                sounds.foundationPlace.triggerAttackRelease("A5", "4n");
-                render();
-                
-                setTimeout(() => {
-                    flashOverlay.classList.remove('flash');
-                    const newCardEl = document.querySelector(`[data-card-id="${newCard.id}"]`);
-                    if(newCardEl) newCardEl.classList.remove('wild-transform');
-                }, 200);
-            }
-        }
-
-        function removeCardFromGame(cardId) {
-            stock = stock.filter(c => c.id !== cardId);
-            waste = waste.filter(c => c.id !== cardId);
-            tableau.forEach(pile => {
-                const index = pile.findIndex(c => c.id === cardId);
-                if (index > -1) pile.splice(index, 1);
-            });
-        }
-
         // --- Helper & Utility Functions ---
         function flipSourceTableauCard(sourcePileName, sourcePileIndex) { if (sourcePileName === 'tableau') { const sourcePile = tableau[sourcePileIndex]; if (sourcePile.length > 0 && !sourcePile[sourcePile.length - 1].isFaceUp) { sourcePile[sourcePile.length - 1].isFaceUp = true; } } }
         function findCard(cardId) { for (const pile of [stock, waste, ...foundations, ...tableau]) { for (const card of pile) { if (card.id === cardId) return card; } } return null; }
@@ -2345,7 +2250,6 @@
                         2: { type: 'feature', name: 'Auto-Move', desc: 'You can now <b>double-tap</b> or <b>double-click</b> a card to automatically move it to a valid pile.' },
                         3: { type: 'feature', name: 'Hints', desc: 'You can now spend Hint points to find a possible move. You get more hints as you level up!' },
                         4: { type: 'feature', name: 'Undo', desc: 'You can now undo your previous move. You get more undos as you level up!' },
-                        5: { type: 'feature', name: 'Wild Card', desc: 'A powerful Wild Card will now be shuffled into the deck each game.' },
                     };
 
                     for(let l = oldLevel + 1; l <= newLevel; l++) {
