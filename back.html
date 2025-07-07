@@ -1007,7 +1007,7 @@
             document.removeEventListener('click', initializeAudio);
             document.removeEventListener('touchstart', initializeAudio);
         }
-        document.addEventListener('click', initializeAudio, { once: true });
+        document.addEventListener('click', initializeAudio, { once: true, capture: true });
         document.addEventListener('touchstart', initializeAudio, { once: true });
 
         startGameBtn.addEventListener('click', () => {
