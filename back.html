@@ -767,14 +767,11 @@
             { id: 'board-35', name: '8-bit City', type: 'animated' },
             ...Array.from({length: 24}, (_, i) => ({ id: `board-${i + 36}`, name: `Pattern ${i + 1}`, type: 'procedural' }))
         ];
-        const MUSIC_DATA = [
-            { id: 'track-0', name: 'Track 00', url: 'https://raw.githubusercontent.com/cdbyall/solitaire/main/music/00.mp3' },
-            ...Array.from({length: 10}, (_, i) => ({
-                id: `track-${i+1}`,
-                name: `Track ${String(i + 1).padStart(2, '0')}`,
-                url: `https://raw.githubusercontent.com/cdbyall/solitaire/main/music/${String(i + 1).padStart(2, '0')}.mp3`
-            }))
-        ];
+        const MUSIC_DATA = Array.from({length: 10}, (_, i) => ({
+            id: `track-${i+1}`,
+            name: `Track ${String(i + 1).padStart(2, '0')}`,
+            url: `https://raw.githubusercontent.com/cdbyall/solitaire/main/music/${String(i + 1).padStart(2, '0')}.mp3`
+        }));
         const ACHIEVEMENTS = {
             firstMove: { name: "Getting Started", desc: "Make your first move.", xp: 1, icon: "▶️", points: 10 },
             firstFoundation: { name: "On the Up and Up", desc: "Place your first card on a foundation.", xp: 5, icon: "🏆", points: 10 },
@@ -824,7 +821,7 @@
         let lastLifeLostTime = 0;
         let devUnlockCounter = 0; // Counter for the secret unlock code
         let isMuted = false;
-        let unlockedTracks = ['track-0', 'track-1'];
+        let unlockedTracks = ['track-1'];
         let currentTrackPlayer;
         let currentTrackIndex = -1;
         let shuffledPlaylist = [];
@@ -999,6 +996,13 @@
             Tone.start().then(() => {
                 setupSounds();
                 setupPhysics();
+
+                if (!titleScreen.classList.contains('hidden')) {
+                    introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/00.mp3").toDestination();
+                    introPlayer.loop = true;
+                    introPlayer.autostart = true;
+                    updateMuteState(false);
+                }
             });
             document.removeEventListener('click', initializeAudio);
             document.removeEventListener('touchstart', initializeAudio);
@@ -1028,6 +1032,11 @@
          * Resets the game state and deals a new set of cards.
          */
         function initializeNewGame() {
+            if (introPlayer) {
+                introPlayer.stop();
+                introPlayer.dispose();
+                introPlayer = null;
+            }
             startMainPlaylist();
 
             if (!isGameWon) {
@@ -1086,7 +1095,7 @@
             unlockedAchievements = JSON.parse(localStorage.getItem('solitaireAchievements') || '[]');
             achievementScore = parseInt(localStorage.getItem('solitaireAchievementScore') || '0');
             isMuted = JSON.parse(localStorage.getItem('solitaireIsMuted') || 'false');
-            unlockedTracks = JSON.parse(localStorage.getItem('solitaireUnlockedTracks')) || ['track-0', 'track-1'];
+            unlockedTracks = JSON.parse(localStorage.getItem('solitaireUnlockedTracks')) || ['track-1'];
             
             checkLevelUp(false); // Update level based on loaded XP
             updateMuteState(false); // Update mute state without playing sound
@@ -2275,8 +2284,8 @@
                         }
 
                         // Handle music unlocks
-                        if (l > 1 && l % 2 === 1) { // Unlock on odd levels: 3, 5, 7...
-                            const trackIndex = (l + 1) / 2;
+                        if (l % 2 === 1) { // Unlock on odd levels: 1, 3, 5...
+                            const trackIndex = (l - 1) / 2;
                             const trackToUnlock = MUSIC_DATA[trackIndex];
                             if (trackToUnlock && !unlockedTracks.includes(trackToUnlock.id)) {
                                 unlockedTracks.push(trackToUnlock.id);
@@ -2892,20 +2901,8 @@
                 if(currentTrackPlayer) currentTrackPlayer.stop();
             }
             
-            // Find the URL for track-0
-            const introTrackUrl = MUSIC_DATA.find(t => t.id === 'track-0').url;
-
-            // Get all *other* unlocked tracks
-            const otherUnlockedUrls = unlockedTracks
-                .filter(trackId => trackId !== 'track-0')
-                .map(trackId => MUSIC_DATA.find(t => t.id === trackId).url);
-
-            // Shuffle the other tracks
-            shuffleArray(otherUnlockedUrls);
-            
-            // Prepend the intro track to the shuffled list
-            shuffledPlaylist = [introTrackUrl, ...otherUnlockedUrls];
-            
+            shuffledPlaylist = unlockedTracks.map(trackId => MUSIC_DATA.find(t => t.id === trackId).url);
+            shuffleArray(shuffledPlaylist);
             currentTrackIndex = -1;
             
             Tone.Transport.start();
