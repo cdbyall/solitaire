@@ -293,11 +293,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let unlockPopupQueue = [];
     let isPopupVisible = false;
 
-
     // --- Sound Engine ---
     let sounds;
     let analyser;
+
+    // *** NEW *** Check if external libraries are loaded
+    const libs = {
+        Tone: typeof Tone !== 'undefined',
+        Matter: typeof Matter !== 'undefined'
+    };
+
     function setupSounds() {
+        // Only run if Tone.js is loaded
+        if (!libs.Tone) return;
         sounds = {
             place: new Tone.PolySynth(Tone.Synth, { oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination(),
             foundationPlace: new Tone.PolySynth(Tone.MetalSynth, { frequency: 200, envelope: { attack: 0.001, decay: 0.4, release: 0.2 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
@@ -343,6 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setupPhysics() {
+        // Only run if Matter.js is loaded
+        if (!libs.Matter) return;
         const { Engine, Render, World, Bodies, Mouse, MouseConstraint, Runner, Events } = Matter;
         engine = Engine.create({ gravity: { y: 0.2 } });
         world = engine.world;
@@ -374,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Events.on(mouseConstraint, 'mousedown', function(event) {
             const clickedBody = Matter.Query.point(comboBodies, event.mouse.position)[0];
             if (clickedBody) {
-                sounds.pop.triggerAttackRelease("C3", "8n");
+                if (sounds) sounds.pop.triggerAttackRelease("C3", "8n");
                 Matter.World.remove(world, clickedBody);
                 comboBodies = comboBodies.filter(b => b !== clickedBody);
             }
@@ -382,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initializeAudio() {
-        if (Tone.context.state === 'running') return;
+        if (!libs.Tone || Tone.context.state === 'running') return;
         Tone.start().then(() => {
             setupSounds();
             setupPhysics();
@@ -395,7 +405,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
+    // --- The rest of the code is the same as the previous "Complete" version ---
+    // I am including all of it again below for certainty.
+
     function promptNewGame() {
         dom.drawSelectModal.style.display = 'flex';
     }
@@ -654,7 +667,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const color2 = `hsl(${(i * 7.2 + 40)}, 70%, 50%)`;
                 try {
                     const rule = `[data-back-style="${back.id}"] .face-down { background: linear-gradient(45deg, ${color1}, ${color2}); }`;
-                    // Avoid inserting duplicate rules
                     let ruleExists = false;
                     for(let i = 0; i < styleSheet.cssRules.length; i++) {
                         if(styleSheet.cssRules[i].selectorText === `[data-back-style="${back.id}"] .face-down`) {
@@ -668,7 +680,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Populate options modals
         populateOptions();
     }
     
@@ -803,7 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Core Game Logic ---
+    // --- Core Game Logic (Continued) ---
     function createDeck() { return SUITS.flatMap(suit => VALUES.map((value, index) => ({ suit, value, rank: index + 1, color: (suit === '♥' || suit === '♦') ? 'red' : 'black', isFaceUp: false, id: `${value}-${suit}` }))); }
     function shuffleDeck(deck) { for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; } }
     function dealCards(deck) { for (let i = 0; i < 7; i++) { for (let j = i; j < 7; j++) tableau[j].push(deck.pop()); } tableau.forEach(pile => { if (pile.length > 0) pile[pile.length - 1].isFaceUp = true; }); stock = deck; }
@@ -1174,9 +1185,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function findCard(cardId) { for (const pile of [stock, waste, ...foundations, ...tableau]) { for (const card of pile) { if (card.id === cardId) return card; } } return null; }
     function findCardLocation(cardId) { if (waste.length > 0 && waste[waste.length - 1].id === cardId) return { pileName: 'waste', pileIndex: -1, cardIndex: waste.length - 1 }; for (let i = 0; i < foundations.length; i++) { const p = foundations[i]; if (p.length > 0 && p[p.length - 1].id === cardId) return { pileName: 'foundation', pileIndex: i, cardIndex: p.length - 1 }; } for (let i = 0; i < tableau.length; i++) { const p = tableau[i]; for (let j = 0; j < p.length; j++) if (p[j].id === cardId) return { pileName: 'tableau', pileIndex: i, cardIndex: j }; } return {}; }
     
-    // ... AND ALL OTHER HELPER, WIN, ANIMATION, ACHIEVEMENT, ETC. FUNCTIONS FROM THE ORIGINAL SCRIPT ...
-    // The following are the remaining functions from the original script, adapted to use the `dom` object where necessary.
-    
     function handleCombo() {
         const now = Date.now();
         if (now - lastMoveTime < 4000) {
@@ -1203,6 +1211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function spawnComboText(text, size, color) {
+        if (!libs.Matter) return;
         clearComboText();
         const { Bodies, World } = Matter;
         const letters = text.split('');
@@ -1239,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function clearComboText() {
-        if(world) Matter.World.remove(world, comboBodies);
+        if(world && libs.Matter) Matter.World.remove(world, comboBodies);
         comboBodies = [];
     }
     
@@ -1530,8 +1539,8 @@ document.addEventListener('DOMContentLoaded', () => {
             hintsAvailable++;
             saveProgress();
             
-            const now = Tone.now();
             if(sounds) {
+                const now = Tone.now();
                 sounds.win.triggerAttackRelease("C4", "2n", now);
                 sounds.win.triggerAttackRelease("E4", "2n", now + 0.2);
                 sounds.win.triggerAttackRelease("G4", "2n", now + 0.4);
@@ -1577,6 +1586,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function winAnimationConfetti() {
+        if (!libs.Matter) return;
         dom.comboCanvas.style.pointerEvents = 'auto';
         const { Bodies, World } = Matter;
         const cardWidth = varToNum('--card-width');
@@ -1593,23 +1603,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }, i * 20);
         });
         winAnimationTimeout = setTimeout(() => {
-            Matter.World.clear(world, false);
+            if(world) Matter.World.clear(world, false);
             dom.comboCanvas.style.pointerEvents = 'none';
         }, 30000);
     }
     
-    function winAnimationVortex() {
-        // ... implementation for vortex win animation
-    }
-    function winAnimationFountain() {
-        // ... implementation for fountain win animation
-    }
-    function winAnimationCascade() {
-        // ... implementation for cascade win animation
-    }
-    function winAnimationShuffle() {
-        // ... implementation for shuffle win animation
-    }
+    function winAnimationVortex() { /* Placeholder */ }
+    function winAnimationFountain() { /* Placeholder */ }
+    function winAnimationCascade() { /* Placeholder */ }
+    function winAnimationShuffle() { /* Placeholder */ }
     
     function createCardTexture(card) {
         const canvas = document.createElement('canvas');
@@ -1620,10 +1622,17 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card-bg');
         ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--card-border');
         ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.roundRect(0, 0, canvas.width, canvas.height, [8]);
-        ctx.fill();
-        ctx.stroke();
+        // Use roundRect if available for cleaner corners
+        if (ctx.roundRect) {
+            ctx.beginPath();
+            ctx.roundRect(0, 0, canvas.width, canvas.height, [8]);
+            ctx.fill();
+            ctx.stroke();
+        } else {
+            // Fallback for older browsers
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.strokeRect(0,0,canvas.width, canvas.height);
+        }
 
         ctx.fillStyle = card.color === 'red' ? '#d90429' : '#000000';
         ctx.font = `bold ${canvas.width * 0.28}px 'Segoe UI', sans-serif`;
@@ -1713,7 +1722,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateMuteState(playSound = true) {
-        if (typeof Tone === 'undefined') return;
+        if (!libs.Tone) return;
         Tone.Master.mute = isMuted;
         if (isMuted) {
             dom.unmutedIcon.style.display = 'none';
@@ -1727,6 +1736,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playNextTrack() {
+        if (!libs.Tone) return;
         if (currentTrackPlayer) currentTrackPlayer.dispose();
         
         if (shuffledPlaylist.length === 0) {
@@ -1741,12 +1751,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTrackPlayer = new Tone.Player({
             url: nextTrackUrl,
             autostart: true,
-            onstop: () => { if (Tone.Transport.state === 'started') playNextTrack(); }
+            onstop: () => { if (libs.Tone && Tone.Transport.state === 'started') playNextTrack(); }
         }).toDestination();
     }
     
     function startMainPlaylist() {
-        if (typeof Tone === 'undefined' || !unlockedTracks.length) return;
+        if (!libs.Tone || !unlockedTracks.length) return;
         if (Tone.Transport.state === 'started') {
             Tone.Transport.stop();
             if(currentTrackPlayer) currentTrackPlayer.stop();
@@ -1761,6 +1771,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playTrackNow(trackUrl) {
+        if (!libs.Tone) return;
         if (currentTrackPlayer) {
             currentTrackPlayer.stop();
             currentTrackPlayer.dispose();
@@ -1768,7 +1779,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTrackPlayer = new Tone.Player({
             url: trackUrl,
             autostart: true,
-            onstop: () => { if (Tone.Transport.state === 'started') playNextTrack(); }
+            onstop: () => { if (libs.Tone && Tone.Transport.state === 'started') playNextTrack(); }
         }).toDestination();
         
         shuffledPlaylist = unlockedTracks.map(trackId => MUSIC_DATA.find(t => t.id === trackId).url);
