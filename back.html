@@ -826,7 +826,7 @@
         let currentTrackIndex = -1;
         let shuffledPlaylist = [];
         let introPlayer;
-        
+        let audioSetupPromise;
         // --- Drag & Drop State ---
         // Manages the state related to dragging and dropping cards.
         let isDragging = false;
@@ -993,22 +993,22 @@
         }
 
         function initializeAudio() {
-            Tone.start().then(() => {
-                setupSounds();
-                setupPhysics();
+            audioSetupPromise = Tone.start().then(() => {
+                setupSounds();
+                setupPhysics();
 
-                if (!titleScreen.classList.contains('hidden')) {
-                    introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/00.mp3").toDestination();
-                    introPlayer.loop = true;
-                    introPlayer.autostart = true;
-                    updateMuteState(false);
-                }
-            });
-            document.removeEventListener('click', initializeAudio);
-            document.removeEventListener('touchstart', initializeAudio);
-        }
-        document.addEventListener('click', initializeAudio, { once: true });
-        document.addEventListener('touchstart', initializeAudio, { once: true });
+                if (!titleScreen.classList.contains('hidden')) {
+                    introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/00.mp3").toDestination();
+                    introPlayer.loop = true;
+                    introPlayer.autostart = true;
+                    updateMuteState(false);
+                }
+            });
+            document.removeEventListener('click', initializeAudio);
+            document.removeEventListener('touchstart', initializeAudio);
+        }
+        document.addEventListener('click', initializeAudio, { once: true });
+        document.addEventListener('touchstart', initializeAudio, { once: true });
 
         startGameBtn.addEventListener('click', () => {
             if (sounds && sounds.click) sounds.click.triggerAttackRelease("C2", "8n");
@@ -1576,16 +1576,16 @@
             drawSelectModal.style.display = 'none';
             cardStyleModal.style.display = 'flex';
         });
-        normalStyleBtn.addEventListener('click', () => {
-            faceStyle = 'default';
-            cardStyleModal.style.display = 'none';
-            initializeNewGame();
-        });
-        easySeeBtn.addEventListener('click', () => {
-            faceStyle = 'easy-see';
-            cardStyleModal.style.display = 'none';
-            initializeNewGame();
-        });
+           normalStyleBtn.addEventListener('click', () => {
+            faceStyle = 'default';
+            cardStyleModal.style.display = 'none';
+            audioSetupPromise.then(initializeNewGame);
+        });
+        easySeeBtn.addEventListener('click', () => {
+            faceStyle = 'easy-see';
+            cardStyleModal.style.display = 'none';
+            audioSetupPromise.then(initializeNewGame);
+        });
 
         autocompleteBtn.addEventListener('click', runAutocomplete);
         hintBtn.addEventListener('click', () => { findHint(); });
