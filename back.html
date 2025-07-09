@@ -1008,7 +1008,7 @@
             document.removeEventListener('touchstart', initializeAudio);
         }
         document.addEventListener('click', initializeAudio, { once: true });
-        document.addEventListener('touchstart', initializeAudio, { once: true });
+        document.addEventListener('touchend', initializeAudio, { once: true });
 
         startGameBtn.addEventListener('click', () => {
             if (sounds && sounds.click) sounds.click.triggerAttackRelease("C2", "8n");
