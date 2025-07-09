@@ -301,6 +301,55 @@
         #fireworks-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
         .firework { position: absolute; font-size: 40px; opacity: 0; animation: shootUp 1s ease-out forwards; }
         @keyframes shootUp { to { transform: translateY(-80vh); opacity: 1; } }
+           /* --- MOBILE WIN ANIMATION --- */
+        #mobile-win-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+        }
+       #mobile-win-text {
+            font-size: clamp(3rem, 15vw, 8rem);
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            animation: rainbow-text-animation 4s linear infinite;
+        }
+
+        /* --- STYLES FOR MOBILE WIN BUTTON --- */
+        .mobile-win-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        #mobile-play-again-btn {
+            padding: 15px 30px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        #mobile-play-again-btn:hover {
+            transform: scale(1.05);
+        }
+        @keyframes rainbow-text-animation {
+            100%,0%{ color: rgb(255,0,0); }
+            16%{ color: rgb(255,165,0); }
+            33%{ color: rgb(255,255,0); }
+            50%{ color: rgb(0,255,0); }
+            66%{ color: rgb(0,0,255); }
+            83%{ color: rgb(75,0,130); }
+        }
         .card.win-animate { display: none; }
         .hint-glow { animation: glow 1.5s infinite; }
         @keyframes glow { 50% { box-shadow: 0 0 20px 10px #ffc107; } }
@@ -588,7 +637,9 @@
     
     <div id="achievement-container"></div>
     <div id="fireworks-container"></div>
-
+    <div id="mobile-win-overlay">
+        <div id="mobile-win-text">YOU WIN!</div>
+    </div>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- DOM Element Selection ---
@@ -633,6 +684,7 @@
         const achievementModal = document.getElementById('achievement-modal');
         const achievementListEl = document.getElementById('achievement-list');
         const closeAchievementModalBtn = document.querySelector('#achievement-modal .close-btn');
+        const mobilePlayAgainBtn = document.getElementById('mobile-play-again-btn');
         const flashOverlay = document.getElementById('flash-overlay');
         const drawSelectModal = document.getElementById('draw-select-modal');
         const draw1Btn = document.getElementById('draw-1-btn');
@@ -1030,54 +1082,103 @@
         }
 
         /**
-         * Resets the game state and deals a new set of cards.
-         */
-        function initializeNewGame() {
-            if (introPlayer) {
-                introPlayer.stop();
-                introPlayer.dispose();
-                introPlayer = null;
-            }
-            startMainPlaylist();
+         /**
+         * Resets the game state and deals a new set of cards.
+         */
+        function initializeNewGame() {
+            // Hide the mobile win screen when starting a new game
+            const mobileWinOverlay = document.getElementById('mobile-win-overlay');
+            if (mobileWinOverlay) mobileWinOverlay.style.display = 'none';
 
-            if (!isGameWon) {
-                winStreak = 0; // Reset streak if the previous game wasn't won
-            }
-            isGameWon = false;
-            aceBonusAwarded = false;
-            tableauBonusAwarded = [false, false, false, false, false, false, false];
-            resetCombo();
-            startTimer();
-            clearTimeout(winAnimationTimeout);
-            comboCanvas.style.pointerEvents = 'none';
-            moveHistory = [];
-            gameTimerEl.textContent = '00:00';
-            
-            // Secret achievement check for spamming "New Game"
-            newGameClickTimes.push(Date.now());
-            if (newGameClickTimes.length > 5) {
-                newGameClickTimes.shift();
-                if (newGameClickTimes[4] - newGameClickTimes[0] < 10000) {
-                    triggerAchievement('newGameSpam');
-                }
-            }
-            
-            // Reset all card piles
-            stock = []; waste = []; foundations = [[], [], [], []];
-            tableau = Array.from({ length: 7 }, () => []);
-            messageBox.textContent = '';
-            autocompleteBtn.classList.add('hidden');
-            gameBoard.style.pointerEvents = 'auto';
-            document.querySelectorAll('.win-animate, .hint-glow').forEach(el => el.classList.remove('win-animate', 'hint-glow'));
+            if (introPlayer) {
+                introPlayer.stop();
+                introPlayer.dispose();
+                introPlayer = null;
+            }
+            startMainPlaylist();
 
-            // Create, shuffle, and deal the deck
-            const deck = createDeck();
-            shuffleDeck(deck);
-            dealCards(deck);
-            updateCardStyles();
-            render();
-            updatePlayerStatsUI();
+            if (!isGameWon) {
+                winStreak = 0; // Reset streak if the previous game wasn't won
+            }
+            isGameWon = false;
+            aceBonusAwarded = false;
+            tableauBonusAwarded = [false, false, false, false, false, false, false];
+            resetCombo();
+            startTimer();
+            clearTimeout(winAnimationTimeout);
+            comboCanvas.style.pointerEvents = 'none';
+            moveHistory = [];
+            gameTimerEl.textContent = '00:00';
+            
+            // Secret achievement check for spamming "New Game"
+            newGameClickTimes.push(Date.now());
+            if (newGameClickTimes.length > 5) {
+                newGameClickTimes.shift();
+                if (newGameClickTimes[4] - newGameClickTimes[0] < 10000) {
+                    triggerAchievement('newGameSpam');
+                }
+            }
+            
+            // Reset all card piles
+            stock = []; waste = []; foundations = [[], [], [], []];
+            tableau = Array.from({ length: 7 }, () => []);
+            messageBox.textContent = '';
+            autocompleteBtn.classList.add('hidden');
+            gameBoard.style.pointerEvents = 'auto';
+            document.querySelectorAll('.win-animate, .hint-glow').forEach(el => el.classList.remove('win-animate', 'hint-glow'));
+
+            // Create, shuffle, and deal the deck
+            const deck = createDeck();
+            shuffleDeck(deck);
+            dealCards(deck);
+            updateCardStyles();
+            render();
+            updatePlayerStatsUI();
+        }
+
+        // --- New helper function to detect mobile devices ---
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
+
+        // --- Win Logic & Animations ---
+        function checkWinCondition() {
+            if (foundations.reduce((sum, pile) => sum + pile.length, 0) === 52) {
+                if (!isGameWon) {
+                    isGameWon = true;
+                    stopTimer();
+                    messageBox.textContent = '🎉 You Win! 🎉';
+                    autocompleteBtn.classList.add('hidden');
+                    gameBoard.style.pointerEvents = 'none';
+                    
+                    winCount++;
+                    winStreak++;
+                    const winBonus = drawCount === 3 ? 20 : 10;
+                    addXP(winBonus, `+${winBonus} XP: You Win!`);
+                    hintsAvailable++;
+
+                    saveProgress();
+                    
+                    const now = Tone.now();
+                    if (sounds && sounds.win) {
+                        sounds.win.triggerAttackRelease("C4", "2n", now);
+                        sounds.win.triggerAttackRelease("E4", "2n", now + 0.2);
+                        sounds.win.triggerAttackRelease("G4", "2n", now + 0.4);
+                        sounds.win.triggerAttackRelease("C5", "1n", now + 0.6);
+                    }
+                    
+                    if (isMobileDevice()) {
+                        // On mobile, show the simple rainbow text animation
+                        document.getElementById('mobile-win-overlay').style.display = 'flex';
+                    } else {
+                        // On desktop, run the physics-based animations
+                        const winAnimations = [winAnimationConfetti, winAnimationVortex, winAnimationFountain, winAnimationCascade, winAnimationShuffle];
+                        const randomAnimation = winAnimations[Math.floor(Math.random() * winAnimations.length)];
+                        randomAnimation();
+                    }
+                }
+            }
+        }
 
         // --- Data Persistence ---
         /**
@@ -1566,6 +1667,12 @@
         }
 
         // --- Event Handlers ---
+        if (mobilePlayAgainBtn) {
+            mobilePlayAgainBtn.addEventListener('click', () => {
+                promptNewGame();
+            });
+        }
+        newGameBtn.addEventListener('click', () => { sounds.click.triggerAttackRelease("C2", "8n"); promptNewGame(); });
         newGameBtn.addEventListener('click', () => { sounds.click.triggerAttackRelease("C2", "8n"); promptNewGame(); });
         draw1Btn.addEventListener('click', () => {
             drawCount = 1;
