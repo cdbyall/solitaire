@@ -2539,211 +2539,240 @@
         }
 
         function winAnimationConfetti() {
-            comboCanvas.style.pointerEvents = 'auto';
-            const { Bodies, World } = Matter;
-            const cardWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-width'));
-            const cardHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-height'));
+            comboCanvas.style.pointerEvents = 'auto';
+            const { Bodies, World } = Matter;
+            
+            // Get styles once before the loop to prevent freezing
+            const styles = getComputedStyle(document.documentElement);
+            const cardWidth = parseFloat(styles.getPropertyValue('--card-width'));
+            const cardHeight = parseFloat(styles.getPropertyValue('--card-height'));
+            const cardBg = styles.getPropertyValue('--card-bg');
+            const cardBorder = styles.getPropertyValue('--card-border');
 
-            const fullDeck = createDeck();
-            fullDeck.forEach((card, i) => {
-                setTimeout(() => {
-                    const cardBody = Bodies.rectangle(
-                        window.innerWidth / 2, window.innerHeight / 2, cardWidth, cardHeight,
-                        {
-                            restitution: 0.7,
-                            friction: 0.1,
-                            angle: Math.random() * Math.PI * 2,
-                            render: { sprite: { texture: createCardTexture(card), xScale: 1, yScale: 1 } }
-                        }
-                    );
-                    Matter.Body.applyForce(cardBody, cardBody.position, {
-                        x: (Math.random() - 0.5) * 0.5,
-                        y: (Math.random() - 0.5) * 0.5
-                    });
-                    World.add(world, cardBody);
-                }, i * 20);
-            });
+            const fullDeck = createDeck();
+            fullDeck.forEach((card, i) => {
+                setTimeout(() => {
+                    const cardBody = Bodies.rectangle(
+                        window.innerWidth / 2, window.innerHeight / 2, cardWidth, cardHeight,
+                        {
+                            restitution: 0.7,
+                            friction: 0.1,
+                            angle: Math.random() * Math.PI * 2,
+                            render: { sprite: { texture: createCardTexture(card, cardWidth, cardHeight, cardBg, cardBorder), xScale: 1, yScale: 1 } }
+                        }
+                    );
+                    Matter.Body.applyForce(cardBody, cardBody.position, {
+                        x: (Math.random() - 0.5) * 0.5,
+                        y: (Math.random() - 0.5) * 0.5
+                    });
+                    World.add(world, cardBody);
+                }, i * 20);
+            });
 
-            winAnimationTimeout = setTimeout(() => {
-                Matter.World.clear(world, false);
-                comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
-        }
+            winAnimationTimeout = setTimeout(() => {
+                Matter.World.clear(world, false);
+                comboCanvas.style.pointerEvents = 'none';
+            }, 30000);
+        }
 
-        function winAnimationVortex() {
-            comboCanvas.style.pointerEvents = 'auto';
-            const { Bodies, World, Body } = Matter;
-            const cardWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-width'));
-            const cardHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-height'));
-            const fullDeck = createDeck();
-            const cardBodies = [];
+        function winAnimationVortex() {
+            comboCanvas.style.pointerEvents = 'auto';
+            const { Bodies, World, Body } = Matter;
 
-            fullDeck.forEach((card, i) => {
-                setTimeout(() => {
-                    const cardBody = Bodies.rectangle(
-                        Math.random() * window.innerWidth, Math.random() * window.innerHeight, cardWidth, cardHeight,
-                        {
-                            render: { sprite: { texture: createCardTexture(card), xScale: 1, yScale: 1 } }
-                        }
-                    );
-                    cardBodies.push(cardBody);
-                    World.add(world, cardBody);
-                }, i * 20);
-            });
+            // Get styles once before the loop to prevent freezing
+            const styles = getComputedStyle(document.documentElement);
+            const cardWidth = parseFloat(styles.getPropertyValue('--card-width'));
+            const cardHeight = parseFloat(styles.getPropertyValue('--card-height'));
+            const cardBg = styles.getPropertyValue('--card-bg');
+            const cardBorder = styles.getPropertyValue('--card-border');
 
-            const vortexInterval = setInterval(() => {
-                cardBodies.forEach(body => {
-                    const dx = window.innerWidth / 2 - body.position.x;
-                    const dy = window.innerHeight / 2 - body.position.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist > 10) {
-                        Body.applyForce(body, body.position, {
-                            x: dx * 0.001,
-                            y: dy * 0.001
-                        });
-                        Body.setAngularVelocity(body, 0.1);
-                    } else {
-                        World.remove(world, body);
-                    }
-                });
-            }, 16);
+            const fullDeck = createDeck();
+            const cardBodies = [];
 
-            winAnimationTimeout = setTimeout(() => {
-                clearInterval(vortexInterval);
-                Matter.World.clear(world, false);
-                comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
-        }
+            fullDeck.forEach((card, i) => {
+                setTimeout(() => {
+                    const cardBody = Bodies.rectangle(
+                        Math.random() * window.innerWidth, Math.random() * window.innerHeight, cardWidth, cardHeight,
+                        {
+                            render: { sprite: { texture: createCardTexture(card, cardWidth, cardHeight, cardBg, cardBorder), xScale: 1, yScale: 1 } }
+                        }
+                    );
+                    cardBodies.push(cardBody);
+                    World.add(world, cardBody);
+                }, i * 20);
+            });
 
-        function winAnimationFountain() {
-            comboCanvas.style.pointerEvents = 'auto';
-            const { Bodies, World } = Matter;
-            const cardWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-width'));
-            const cardHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-height'));
-            const fullDeck = createDeck();
+            const vortexInterval = setInterval(() => {
+                cardBodies.forEach(body => {
+                    const dx = window.innerWidth / 2 - body.position.x;
+                    const dy = window.innerHeight / 2 - body.position.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist > 10) {
+                        Body.applyForce(body, body.position, {
+                            x: dx * 0.001,
+                            y: dy * 0.001
+                        });
+                        Body.setAngularVelocity(body, 0.1);
+                    } else {
+                        World.remove(world, body);
+                    }
+                });
+            }, 16);
 
-            fullDeck.forEach((card, i) => {
-                setTimeout(() => {
-                    const cardBody = Bodies.rectangle(
-                        window.innerWidth / 2, window.innerHeight, cardWidth, cardHeight,
-                        {
-                            restitution: 0.2,
-                            render: { sprite: { texture: createCardTexture(card), xScale: 1, yScale: 1 } }
-                        }
-                    );
-                    Matter.Body.applyForce(cardBody, cardBody.position, {
-                        x: (Math.random() - 0.5) * 0.1,
-                        y: -0.2
-                    });
-                    World.add(world, cardBody);
-                }, i * 50);
-            });
+            winAnimationTimeout = setTimeout(() => {
+                clearInterval(vortexInterval);
+                Matter.World.clear(world, false);
+                comboCanvas.style.pointerEvents = 'none';
+            }, 30000);
+        }
 
-            winAnimationTimeout = setTimeout(() => {
-                Matter.World.clear(world, false);
-                comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
-        }
+        function winAnimationFountain() {
+            comboCanvas.style.pointerEvents = 'auto';
+            const { Bodies, World } = Matter;
 
-        function winAnimationCascade() {
-            comboCanvas.style.pointerEvents = 'auto';
-            const { Bodies, World } = Matter;
-            const cardWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-width'));
-            const cardHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-height'));
-            const fullDeck = createDeck();
+            // Get styles once before the loop to prevent freezing
+            const styles = getComputedStyle(document.documentElement);
+            const cardWidth = parseFloat(styles.getPropertyValue('--card-width'));
+            const cardHeight = parseFloat(styles.getPropertyValue('--card-height'));
+            const cardBg = styles.getPropertyValue('--card-bg');
+            const cardBorder = styles.getPropertyValue('--card-border');
 
-            fullDeck.forEach((card, i) => {
-                setTimeout(() => {
-                    const cardBody = Bodies.rectangle(
-                        Math.random() * window.innerWidth, -100, cardWidth, cardHeight,
-                        {
-                            restitution: 0.5,
-                            render: { sprite: { texture: createCardTexture(card), xScale: 1, yScale: 1 } }
-                        }
-                    );
-                    World.add(world, cardBody);
-                }, i * 50);
-            });
+            const fullDeck = createDeck();
 
-            winAnimationTimeout = setTimeout(() => {
-                Matter.World.clear(world, false);
-                comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
-        }
+            fullDeck.forEach((card, i) => {
+                setTimeout(() => {
+                    const cardBody = Bodies.rectangle(
+                        window.innerWidth / 2, window.innerHeight, cardWidth, cardHeight,
+                        {
+                            restitution: 0.2,
+                            render: { sprite: { texture: createCardTexture(card, cardWidth, cardHeight, cardBg, cardBorder), xScale: 1, yScale: 1 } }
+                        }
+                    );
+                    Matter.Body.applyForce(cardBody, cardBody.position, {
+                        x: (Math.random() - 0.5) * 0.1,
+                        y: -0.2
+                    });
+                    World.add(world, cardBody);
+                }, i * 50);
+            });
 
-        function winAnimationShuffle() {
-            comboCanvas.style.pointerEvents = 'auto';
-            const { Bodies, World, Body } = Matter;
-            const cardWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-width'));
-            const cardHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-height'));
-            const fullDeck = createDeck();
-            const cardBodies = [];
+            winAnimationTimeout = setTimeout(() => {
+                Matter.World.clear(world, false);
+                comboCanvas.style.pointerEvents = 'none';
+            }, 30000);
+        }
 
-            fullDeck.forEach((card, i) => {
-                const cardBody = Bodies.rectangle(
-                    Math.random() * window.innerWidth, Math.random() * window.innerHeight, cardWidth, cardHeight,
-                    {
-                        frictionAir: 0.05,
-                        render: { sprite: { texture: createCardTexture(card), xScale: 1, yScale: 1 } }
-                    }
-                );
-                cardBodies.push(cardBody);
-                World.add(world, cardBody);
-            });
+        function winAnimationCascade() {
+            comboCanvas.style.pointerEvents = 'auto';
+            const { Bodies, World } = Matter;
+            
+            // Get styles once before the loop to prevent freezing
+            const styles = getComputedStyle(document.documentElement);
+            const cardWidth = parseFloat(styles.getPropertyValue('--card-width'));
+            const cardHeight = parseFloat(styles.getPropertyValue('--card-height'));
+            const cardBg = styles.getPropertyValue('--card-bg');
+            const cardBorder = styles.getPropertyValue('--card-border');
 
-            const shuffleInterval = setInterval(() => {
-                cardBodies.forEach(body => {
-                    Body.applyForce(body, body.position, {
-                        x: (Math.random() - 0.5) * 0.1,
-                        y: (Math.random() - 0.5) * 0.1
-                    });
-                });
-            }, 500);
+            const fullDeck = createDeck();
 
-            winAnimationTimeout = setTimeout(() => {
-                clearInterval(shuffleInterval);
-                Matter.World.clear(world, false);
-                comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
-        }
+            fullDeck.forEach((card, i) => {
+                setTimeout(() => {
+                    const cardBody = Bodies.rectangle(
+                        Math.random() * window.innerWidth, -100, cardWidth, cardHeight,
+                        {
+                            restitution: 0.5,
+                            render: { sprite: { texture: createCardTexture(card, cardWidth, cardHeight, cardBg, cardBorder), xScale: 1, yScale: 1 } }
+                        }
+                    );
+                    World.add(world, cardBody);
+                }, i * 50);
+            });
 
-        function createCardTexture(card) {
-            const canvas = document.createElement('canvas');
-            canvas.width = varToNum('--card-width');
-            canvas.height = varToNum('--card-height');
-            const ctx = canvas.getContext('2d');
-            
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card-bg');
-            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--card-border');
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(8, 0);
-            ctx.lineTo(canvas.width - 8, 0);
-            ctx.quadraticCurveTo(canvas.width, 0, canvas.width, 8);
-            ctx.lineTo(canvas.width, canvas.height - 8);
-            ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - 8, canvas.height);
-            ctx.lineTo(8, canvas.height);
-            ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - 8);
-            ctx.lineTo(0, 8);
-            ctx.quadraticCurveTo(0, 0, 8, 0);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+            winAnimationTimeout = setTimeout(() => {
+                Matter.World.clear(world, false);
+                comboCanvas.style.pointerEvents = 'none';
+            }, 30000);
+        }
 
-            ctx.fillStyle = card.color === 'red' ? '#d90429' : '#000000';
-            ctx.font = `bold 28px 'Segoe UI', sans-serif`;
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'top';
-            ctx.fillText(`${card.value}${card.suit}`, 10, 10);
-            
-            ctx.save();
-            ctx.translate(canvas.width, canvas.height);
-            ctx.rotate(Math.PI);
-            ctx.fillText(`${card.value}${card.suit}`, 10, 10);
-            ctx.restore();
+        function winAnimationShuffle() {
+            comboCanvas.style.pointerEvents = 'auto';
+            const { Bodies, World, Body } = Matter;
 
-            return canvas.toDataURL();
-        }
+            // Get styles once before the loop to prevent freezing
+            const styles = getComputedStyle(document.documentElement);
+            const cardWidth = parseFloat(styles.getPropertyValue('--card-width'));
+            const cardHeight = parseFloat(styles.getPropertyValue('--card-height'));
+            const cardBg = styles.getPropertyValue('--card-bg');
+            const cardBorder = styles.getPropertyValue('--card-border');
+
+            const fullDeck = createDeck();
+            const cardBodies = [];
+
+            fullDeck.forEach((card, i) => {
+                const cardBody = Bodies.rectangle(
+                    Math.random() * window.innerWidth, Math.random() * window.innerHeight, cardWidth, cardHeight,
+                    {
+                        frictionAir: 0.05,
+                        render: { sprite: { texture: createCardTexture(card, cardWidth, cardHeight, cardBg, cardBorder), xScale: 1, yScale: 1 } }
+                    }
+                );
+                cardBodies.push(cardBody);
+                World.add(world, cardBody);
+            });
+
+            const shuffleInterval = setInterval(() => {
+                cardBodies.forEach(body => {
+                    Body.applyForce(body, body.position, {
+                        x: (Math.random() - 0.5) * 0.1,
+                        y: (Math.random() - 0.5) * 0.1
+                    });
+                });
+            }, 500);
+
+            winAnimationTimeout = setTimeout(() => {
+                clearInterval(shuffleInterval);
+                Matter.World.clear(world, false);
+                comboCanvas.style.pointerEvents = 'none';
+            }, 30000);
+        }
+
+        function createCardTexture(card, width, height, bgColor, borderColor) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = bgColor;
+            ctx.strokeStyle = borderColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(8, 0);
+            ctx.lineTo(width - 8, 0);
+            ctx.quadraticCurveTo(width, 0, width, 8);
+            ctx.lineTo(width, height - 8);
+            ctx.quadraticCurveTo(width, height, width - 8, height);
+            ctx.lineTo(8, height);
+            ctx.quadraticCurveTo(0, height, 0, height - 8);
+            ctx.lineTo(0, 8);
+            ctx.quadraticCurveTo(0, 0, 8, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = card.color === 'red' ? '#d90429' : '#000000';
+            ctx.font = `bold ${height * 0.2}px 'Segoe UI', sans-serif`; // Font size relative to height
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`${card.value}${card.suit}`, 10, 10);
+            
+            ctx.save();
+            ctx.translate(width, height);
+            ctx.rotate(Math.PI);
+            ctx.fillText(`${card.value}${card.suit}`, 10, 10);
+            ctx.restore();
+
+            return canvas.toDataURL();
+        }
 
         function varToNum(varName) {
             return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(varName));
