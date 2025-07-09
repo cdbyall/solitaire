@@ -504,7 +504,8 @@
             </div>
         </div>
         
-        <footer style="margin-top: auto; padding-top: 20px;">Created by PM Lewis</footer>
+        <footer style="margin-top: auto; padding-top: 20px;">Created by <span id="pm-lewis-secret" style="cursor: pointer;">PM</span> Lewis</footer>
+
     </div>
 
     <div id="draw-select-modal" class="modal-overlay">
@@ -2977,6 +2978,37 @@
 
         // --- Initial Setup ---
         // Final setup calls when the DOM is fully loaded.
+        // --- Easter Egg: Click "PM Lewis" to trigger win animation ---
+        const pmSecretTrigger = document.getElementById('pm-lewis-secret');
+        let pmClickCount = 0;
+
+        if (pmSecretTrigger) {
+            pmSecretTrigger.addEventListener('click', () => {
+                pmClickCount++;
+                if (pmClickCount >= 8) {
+                    // Prevent multiple animations from running at once
+                    if (winAnimationTimeout) {
+                        clearTimeout(winAnimationTimeout);
+                        if(world) Matter.World.clear(world, false);
+                    }
+                    
+                    // Trigger a random win animation
+                    const winAnimations = [winAnimationConfetti, winAnimationVortex, winAnimationFountain, winAnimationCascade, winAnimationShuffle];
+                    const randomAnimation = winAnimations[Math.floor(Math.random() * winAnimations.length)];
+                    randomAnimation();
+
+                    // Play a sound if the audio engine is ready
+                    if (sounds && sounds.levelUp) {
+                        sounds.levelUp.triggerAttackRelease("C7", "2n");
+                    }
+                    
+                    // Reset the counter
+                    pmClickCount = 0;
+                }
+            });
+        }
+
+        // --- Initial Setup ---
         animateTitleScreen();
         window.addEventListener('resize', () => {
             updatePlayerStatsUI();
