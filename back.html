@@ -1565,7 +1565,7 @@
         }
 
         // --- Event Handlers ---
-        newGameBtn.addEventListener('click', () => { sounds.click.triggerAttackRelease("C2", "8n"); promptNewGame(); });
+        newGameBtn.addEventListener('click', () => { sounds.click.triggerAttackRelease("C2", "8n"); initializeNewGame(); });
         draw1Btn.addEventListener('click', () => {
             drawCount = 1;
             drawSelectModal.style.display = 'none';
