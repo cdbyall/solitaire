@@ -1000,7 +1000,7 @@
                 if (!titleScreen.classList.contains('hidden')) {
                     introPlayer = new Tone.Player("https://raw.githubusercontent.com/cdbyall/solitaire/main/music/00.mp3").toDestination();
                     introPlayer.loop = true;
-                    introPlayer.autostart = true;
+                    //introPlayer.autostart = false;//
                     updateMuteState(false);
                 }
             });
