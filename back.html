@@ -1149,9 +1149,7 @@
                     stopTimer();
                     messageBox.textContent = '🎉 You Win! 🎉';
                     autocompleteBtn.classList.add('hidden');
-                    gameBoard.style.pointerEvents = 'none';
-                    
-                    winCount++;
+                    winCount++;
                     winStreak++;
                     const winBonus = drawCount === 3 ? 20 : 10;
                     addXP(winBonus, `+${winBonus} XP: You Win!`);
