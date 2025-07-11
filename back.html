@@ -645,6 +645,7 @@
         // --- DOM Element Selection ---
         // This section efficiently gathers all necessary HTML elements from the page
         // to be used by the JavaScript game logic.
+        const mobilePlayAgainBtn = document.getElementById('mobile-play-again-btn');
         const gameBoard = document.getElementById('game-board');
         const stockPileEl = document.getElementById('stock-pile');
         const wastePileEl = document.getElementById('waste-pile');
@@ -2678,7 +2679,7 @@
             winAnimationTimeout = setTimeout(() => {
                 Matter.World.clear(world, false);
                 comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
+            }, 5000);
         }
 
         function winAnimationVortex() {
@@ -2729,7 +2730,7 @@
                 clearInterval(vortexInterval);
                 Matter.World.clear(world, false);
                 comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
+            }, 5000);
         }
 
         function winAnimationFountain() {
@@ -2765,7 +2766,7 @@
             winAnimationTimeout = setTimeout(() => {
                 Matter.World.clear(world, false);
                 comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
+            }, 5000);
         }
 
         function winAnimationCascade() {
@@ -2797,7 +2798,7 @@
             winAnimationTimeout = setTimeout(() => {
                 Matter.World.clear(world, false);
                 comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
+            }, 5000);
         }
 
         function winAnimationShuffle() {
@@ -2839,7 +2840,7 @@
                 clearInterval(shuffleInterval);
                 Matter.World.clear(world, false);
                 comboCanvas.style.pointerEvents = 'none';
-            }, 30000);
+            }, 5000);
         }
 
         function createCardTexture(card, width, height, bgColor, borderColor) {
